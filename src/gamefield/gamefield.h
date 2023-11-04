@@ -13,7 +13,7 @@ public:
     explicit GameField(QWidget *parent = nullptr);
 signals:
     void NextFigureUpdated(const Figure&);
-    void ScoreUpdated(int);
+    void ScoreUpdated(uint);
     void GameOver();
 public slots:
     void StartNewGame();
@@ -31,7 +31,8 @@ private:
 private:
     FigureGenerator<> figureGenerator_;
     Figure currentFigure_, nextFigure_;
-    int dx_ = 0, dy_ = 0, score_ = 0;
+    int dx_ = 0, dy_ = 0;
+    uint score_ = 0;
     QTimer timer_;
 };
 

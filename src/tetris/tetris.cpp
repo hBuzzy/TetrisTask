@@ -28,9 +28,7 @@ Tetris::Tetris(QWidget *parent) : QMainWindow(parent), ui(new Ui::Tetris) {
     );
     connect(
         ui->gameField, &GameField::GameOver,
-        ui->scoreDisplay, [this](){
-            ui->scoreDisplay->display(0);
-        }
+        [this](){ ui->scoreDisplay->display(0); }
     );
     connect(
         ui->exitButton, &QPushButton::clicked,
