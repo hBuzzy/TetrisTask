@@ -61,7 +61,7 @@ void GameField::NextFigure() {
             cell.fill(kCellDefaultColor);
         }
         std::ranges::copy_if(
-            std::ranges::views::reverse(cellsColors_), copy.rbegin(), [](auto&& line) {
+            std::ranges::views::reverse(cellsColors_), copy.rbegin(), [](auto&& line){
                 return std::ranges::any_of(
                     std::forward<decltype(line)>(line),
                     [](const QColor& color){
@@ -128,7 +128,7 @@ void GameField::EraseFigure(const Figure& figure) {
 
 bool GameField::IsOutOfBounds(const Figure& figure, int dx, int dy) {
     bool result = static_cast<int>(figure.GetLeft()) + dx_ + dx < 0
-        || static_cast<int>(figure.GetRight())+ dx_ + dx >= columnsCount_
+        || static_cast<int>(figure.GetRight()) + dx_ + dx >= columnsCount_
         || static_cast<int>(figure.GetBottom()) + dy_ + dy >= rowsCount_
         || std::ranges::any_of(
             std::ranges::views::filter(figure.GetGeometry(), [this, dx, dy](auto&& cell){
