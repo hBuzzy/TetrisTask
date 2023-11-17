@@ -1,46 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Tetris</class>
- <widget class="QMainWindow" name="Tetris">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>561</width>
+    <height>459</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Tetris</string>
+   <string>MainWindow</string>
   </property>
-  <widget class="GameField" name="centralwidget">
-   <property name="rowsNumber" stdset="0">
-    <UInt>20</UInt>
-   </property>
-   <property name="columnsNumber" stdset="0">
-    <UInt>10</UInt>
-   </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout_2">
+    <item>
+     <layout class="QHBoxLayout" name="mainLayout"/>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>561</width>
      <height>21</height>
     </rect>
    </property>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>GameField</class>
-   <extends>QWidget</extends>
-   <header>gamefield.h</header>
-   <container>1</container>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

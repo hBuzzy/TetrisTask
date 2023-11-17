@@ -1,22 +1,34 @@
-#ifndef TETRIS_H
-#define TETRIS_H
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QMessageBox>
+#include "gamefield.h"
 
 QT_BEGIN_NAMESPACE
-namespace Ui {
-class Tetris;
-}
+namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
-class Tetris : public QMainWindow {
-  Q_OBJECT
+class MainWindow : public QMainWindow
+{
+    Q_OBJECT
 
- public:
-  Tetris(QWidget *parent = nullptr);
-  ~Tetris();
+public:
+    MainWindow(QWidget *parent = nullptr);
+    ~MainWindow();
 
- private:
-  Ui::Tetris *ui;
+public slots:
+    void keyPressEvent(QKeyEvent *event);
+    void showRules();
+
+
+signals:
+    void leftKeyPressed();
+    void downKeyPressed();
+    void rightKeyPressed();
+    void rotateKeyPressed();
+
+private:
+    Ui::MainWindow *ui;
 };
-#endif  // TETRIS_H
+#endif // MAINWINDOW_H

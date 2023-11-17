@@ -2,35 +2,50 @@
 #define GAMEFIELD_H
 
 #include <QWidget>
+#include <QLabel>
+#include <QVBoxLayout>
+#include <QDebug>
+#include <QPainter>
+#include <QKeyEvent>
+#include <QPaintEvent>
+#include <QPushButton>
+#include <QMainWindow>
+#include "gamestate.h"
 
 class GameField : public QWidget {
-  Q_OBJECT
- public:
-  explicit GameField(QWidget *parent = nullptr);
+    Q_OBJECT
+public:
+    explicit GameField(QWidget *parent = nullptr);
 
-  Q_PROPERTY(uint rowsNumber READ GetRowsNumber WRITE SetRowsNumber NOTIFY
-                 RowsNumberChanged FINAL)
-  Q_PROPERTY(uint columnsNumber READ GetColumnsNumber WRITE SetColumnNumber
-                 NOTIFY ColumnsNumberChanged FINAL)
+    Q_PROPERTY(int rowsNumber READ getRowsNumber WRITE setRowsNumber NOTIFY
+                   rowsNumberChanged FINAL)
+    Q_PROPERTY(int columnsNumber READ getColumnsNumber WRITE setColumnNumber
+                   NOTIFY columnsNumberChanged FINAL)
 
- signals:
-  void RowsNumberChanged();
-  void ColumnsNumberChanged();
-  void InitialisationStarted();
+public slots:
+    void updateUI();
+    void paintEvent(QPaintEvent *event);
+    void startNewGame();
 
- private slots:
-  void SetCells();
+signals:
+    void rowsNumberChanged();
+    void columnsNumberChanged();
+    void leftKeyPressed();
+    void downKeyPressed();
+    void rightKeyPressed();
+    void rotateKeyPressed();
 
- public:
-  uint GetRowsNumber() const;
-  void SetRowsNumber(uint newRowsNumber);
+public:
+    int getRowsNumber() const;
+    void setRowsNumber(int newRowsNumber);
 
-  uint GetColumnsNumber() const;
-  void SetColumnNumber(uint newColumnsCount);
+    int getColumnsNumber() const;
+    void setColumnNumber(int newColumnsCount);
 
- private:
-  uint rowsNumber_ = 0;
-  uint columnsNumber_ = 0;
+private:
+    int rowsNumber_ = 0;
+    int columnsNumber_ = 0;
+    GameState *gameState_;
 };
 
-#endif  // GAMEFIELD_H
+#endif // GAMEFIELD_H
