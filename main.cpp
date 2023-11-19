@@ -4,7 +4,7 @@
 
 int main(int argc, char *argv[]) {
   QApplication a(argc, argv);
-  Tetris w;
-  w.show();
+  Tetris tetris;
+  tetris.show();
   return a.exec();
 }

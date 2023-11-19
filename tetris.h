@@ -1,7 +1,10 @@
 #ifndef TETRIS_H
 #define TETRIS_H
 
+#include <QLabel>
 #include <QMainWindow>
+
+#include "ui_tetris.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -17,6 +20,10 @@ class Tetris : public QMainWindow {
   ~Tetris();
 
  private:
+  QLabel *nextFigureLabel_;
+  GameField *field;
+
   Ui::Tetris *ui;
+  void ShowHelp();
 };
 #endif  // TETRIS_H

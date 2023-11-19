@@ -9,11 +9,13 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    figure.cpp \
     gamefield.cpp \
     main.cpp \
     tetris.cpp
 
 HEADERS += \
+    figure.h \
     gamefield.h \
     tetris.h
 
