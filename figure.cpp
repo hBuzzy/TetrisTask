@@ -18,7 +18,7 @@ int Figure::GetX(int index) const { return coordinates_[index][0]; }
 
 int Figure::GetY(int index) const { return coordinates_[index][1]; }
 
-int Figure::GetNumberOfCells() const { return kNumberOfCells_; };
+int Figure::GetNumberCells() const { return kNumberOfCells_; };
 
 void Figure::SetShape(Shapes shape) {
   const int coordinateTable[kNumberOfShapes_][kNumberOfCells_]
@@ -49,36 +49,21 @@ void Figure::SetX(int index, int x) { coordinates_[index][0] = x; }
 
 void Figure::SetY(int index, int y) { coordinates_[index][1] = y; }
 
-int Figure::GetMinX() const {
-  int min = coordinates_[0][0];
+int Figure::GetMinX() const { return GetExtreme(true, false); }
+
+int Figure::GetMaxX() const { return GetExtreme(true, true); }
+
+int Figure::GetMinY() const { return GetExtreme(false, false); }
+
+int Figure::GetMaxY() const { return GetExtreme(false, true); }
+
+int Figure::GetExtreme(bool isX, bool isMax) const {
+  int extreme = coordinates_[0][isX ? 0 : 1];
   for (int i = 1; i < kNumberOfCells_; ++i) {
-    min = qMin(min, coordinates_[i][0]);
+    int currentValue = coordinates_[i][isX ? 0 : 1];
+    extreme = isMax ? qMax(extreme, currentValue) : qMin(extreme, currentValue);
   }
-  return min;
-}
-
-int Figure::GetMaxX() const {
-  int max = coordinates_[0][0];
-  for (int i = 1; i < kNumberOfCells_; ++i) {
-    max = qMax(max, coordinates_[i][0]);
-  };
-  return max;
-}
-
-int Figure::GetMinY() const {
-  int min = coordinates_[0][1];
-  for (int i = 1; i < kNumberOfCells_; ++i) {
-    min = qMin(min, coordinates_[i][1]);
-  };
-  return min;
-}
-
-int Figure::GetMaxY() const {
-  int max = coordinates_[0][1];
-  for (int i = 1; i < kNumberOfCells_; ++i) {
-    max = qMax(max, coordinates_[i][1]);
-  }
-  return max;
+  return extreme;
 }
 
 QColor Figure::GetColor() const { return color_; }

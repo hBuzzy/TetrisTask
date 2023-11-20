@@ -15,11 +15,12 @@ class Figure {
   int GetMaxX() const;
   int GetMinY() const;
   int GetMaxY() const;
+  int GetExtreme(bool isX, bool isMax) const;
 
   int GetX(int index) const;
   int GetY(int index) const;
 
-  int GetNumberOfCells() const;
+  int GetNumberCells() const;
 
   QColor GetColor() const;
 

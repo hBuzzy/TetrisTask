@@ -21,7 +21,7 @@ class Tetris : public QMainWindow {
 
  private:
   QLabel *nextFigureLabel_;
-  GameField *field;
+  GameField *field_;
 
   Ui::Tetris *ui;
   void ShowHelp();

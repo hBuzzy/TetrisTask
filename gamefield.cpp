@@ -51,25 +51,27 @@ void GameField::paintEvent(QPaintEvent *event) {
 
   int fieldTop = rect.bottom() - rowsNumber_ * kCellSize_;
 
-  for (uint i = 0; i < rowsNumber_; ++i) {
-    for (uint j = 0; j < columnsNumber_; ++j) {
-      Shapes shape = SearchShape(j, rowsNumber_ - i - 1);
-      if (shape != NoShape)
-        DrawSquare(rect.left() + j * kCellSize_, fieldTop + i * kCellSize_,
-                   nextFigure_.KColors_[static_cast<int>(shape)], painter);
+  if (!fieldShapes_.empty()) {
+    for (uint i = 0; i < rowsNumber_; ++i) {
+      for (uint j = 0; j < columnsNumber_; ++j) {
+        Shapes shape = SearchShape(j, rowsNumber_ - i - 1);
+        if (shape != NoShape)
+          DrawSquare(rect.left() + j * kCellSize_, fieldTop + i * kCellSize_,
+                     nextFigure_.KColors_[static_cast<int>(shape)], painter);
+      }
     }
-  }
 
-  int numberOfCells = currentFigure_.GetNumberOfCells();
-  int numberNoShape = 0;
+    int numberCells = currentFigure_.GetNumberCells();
+    int numberNoShape = 0;
 
-  if (currentFigure_.GetShape() != numberNoShape) {
-    for (int i = 0; i < numberOfCells; ++i) {
-      int x = currentX_ + currentFigure_.GetX(i);
-      int y = currentY_ - currentFigure_.GetY(i);
-      DrawSquare(rect.left() + x * kCellSize_,
-                 fieldTop + (rowsNumber_ - y - 1) * kCellSize_,
-                 currentFigure_.GetColor(), painter);
+    if (currentFigure_.GetShape() != numberNoShape) {
+      for (int i = 0; i < numberCells; ++i) {
+        int x = currentX_ + currentFigure_.GetX(i);
+        int y = currentY_ - currentFigure_.GetY(i);
+        DrawSquare(rect.left() + x * kCellSize_,
+                   fieldTop + (rowsNumber_ - y - 1) * kCellSize_,
+                   currentFigure_.GetColor(), painter);
+      }
     }
   }
 }
@@ -223,7 +225,9 @@ void GameField::MoveFigureOneLineDown() {
 }
 
 void GameField::FinishFigureDrop() {
-  for (int i = 0; i < 4; ++i) {
+  int numberCells = currentFigure_.GetNumberCells();
+
+  for (int i = 0; i < numberCells; ++i) {
     int x = currentX_ + currentFigure_.GetX(i);
     int y = currentY_ - currentFigure_.GetY(i);
     SearchShape(x, y) = currentFigure_.GetShape();
@@ -244,7 +248,9 @@ void GameField::ShowNextFigure(QLabel *nextFigurePicture,
   QPainter painter(&pixmap);
   painter.fillRect(pixmap.rect(), nextFigurePicture->palette().background());
 
-  for (int i = 0; i < 4; ++i) {
+  int numberCells = currentFigure_.GetNumberCells();
+
+  for (int i = 0; i < numberCells; ++i) {
     int x = nextFigure_.GetX(i) - nextFigure_.GetMinX();
     int y = nextFigure_.GetY(i) - nextFigure_.GetMinY();
     DrawSquare(x * kCellSize_, y * kCellSize_, nextFigure_.GetColor(), painter);
@@ -254,12 +260,14 @@ void GameField::ShowNextFigure(QLabel *nextFigurePicture,
 }
 
 void GameField::RemoveLines() {
-  int numberOfFullLines = CountFullLines();
-  int addScore = 10;
+  int numberFullLines = CountFullLines();
+  int score = 10;
 
-  if (numberOfFullLines > 0) {
-    UpdateScore(addScore);
-    ShiftLines();
+  if (numberFullLines > 0) {
+    UpdateScore(score * numberFullLines);
+    for (int i = 0; i < numberFullLines; ++i) {
+      ShiftLines();
+    }
     gameTimer_.start(intervalTime_, this);
     isWaiting_ = true;
     currentFigure_.SetShape(NoShape);
