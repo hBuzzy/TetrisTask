@@ -76,16 +76,16 @@ void GameField::paintEvent(QPaintEvent *event) {
     QFont font("Arial", 12);
     painter.setFont(font);
     painter.setPen(Qt::white);
-    painter.drawText(440, 100, QString("Очки: %1").arg(gameState_ -> getScore()));
+    painter.drawText(xPramText, 100, QString("Очки: %1").arg(gameState_ -> getScore()));
 
     painter.setPen(Qt::white);
-    painter.drawText(440, 200, QString("Следующая:"));
+    painter.drawText(xPramText, 200, QString("Следующая:"));
 
     Figure currentFigure_ = gameState_->getNextFigure();
     for (int i = 0; i < currentFigure_.getHeight(); ++i){
         for (int j = 0; j < currentFigure_.getWidth(); ++j){
             if (currentFigure_.getShapeAt(j, i) == 1){
-                 painter.fillRect(440 + j * cellSize, 230 + i * cellSize, cellSize, cellSize, Qt::white);
+                 painter.fillRect(yParamDraw + j * cellSize, yParamDraw + i * cellSize, cellSize, cellSize, Qt::white);
             }
         }
     }

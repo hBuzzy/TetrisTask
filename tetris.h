@@ -21,7 +21,6 @@ public slots:
     void keyPressEvent(QKeyEvent *event);
     void showRules();
 
-
 signals:
     void leftKeyPressed();
     void downKeyPressed();

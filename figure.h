@@ -35,5 +35,5 @@ private:
 signals:
 
 };
-
+int lenght;
 #endif // FIGURE_H

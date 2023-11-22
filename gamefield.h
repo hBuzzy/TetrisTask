@@ -47,5 +47,6 @@ private:
     int columnsNumber_ = 0;
     GameState *gameState_;
 };
-
+int xPramText = 440;
+int yParamDraw = 230;
 #endif // GAMEFIELD_H

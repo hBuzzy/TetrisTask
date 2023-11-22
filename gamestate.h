@@ -43,5 +43,5 @@ private:
     QTimer* timer_;
     int score_;
 };
-
+int pointScore = 4;
 #endif // GAMESTATE_H

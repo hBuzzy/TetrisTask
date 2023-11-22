@@ -33,7 +33,7 @@ int Figure::getShapeAt(int row, int col) const {
 
 void Figure::generate() {
     srand(static_cast<unsigned>(time(0)));
-    int randomIndex = rand() % 7;
+    int randomIndex = rand() % lenght;
 
     switch (randomIndex) {
         case 0:

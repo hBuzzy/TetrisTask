@@ -130,7 +130,7 @@ void GameState::clearLines() {
             gameBoard_.prepend(QVector<int> (gameBoard_[0].size(), 0));
             emit lineCleared();
             i++;
-            score_ += 4;
+            score_ += pointScore;
         }
     }
 }
