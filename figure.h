@@ -15,11 +15,11 @@ class Figure final {
   bool MoveDown(QVector<QVector<QColor>> coordinateGlobal);
 
  protected:
-  bool CheckColisium(QVector<QVector<QColor>>, int);
+  bool HasCollisions(QVector<QVector<QColor>>, int);
 
  private:
    QColor kCellColor;
-   QVector<QVector<QPair<int, int>>> coordinate_;
+   QVector<QVector<QPair<int, int>>> coordinates_;
 
 };
 

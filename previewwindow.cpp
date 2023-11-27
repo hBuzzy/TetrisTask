@@ -14,6 +14,10 @@ PreviewWindow::PreviewWindow(QWidget *parent) : QWidget{parent} {
 
 uint PreviewWindow::GetRowsNumber() const { return rowsNumber_; }
 
+uint PreviewWindow::GetColumnsNumber() const { return columnsNumber_; }
+
+QSize PreviewWindow::GetSize() const { return QSize(columnsNumber_, rowsNumber_) * kCellSize; }
+
 void PreviewWindow::SetRowsNumber(uint rowsNumber) {
   if (rowsNumber_ == rowsNumber) return;
 
@@ -21,7 +25,16 @@ void PreviewWindow::SetRowsNumber(uint rowsNumber) {
   emit RowsNumberChanged();
 }
 
-uint PreviewWindow::GetColumnsNumber() const { return columnsNumber_; }
+void PreviewWindow::SetCells() {
+  cellsColors_.resize(rowsNumber_);
+
+  for (uint i = 0; i < rowsNumber_; i++) {
+    cellsColors_[i].resize(columnsNumber_);
+  }
+
+  ResetCellsColor();
+  setFixedSize(GetSize());
+}
 
 void PreviewWindow::SetColumnNumber(uint columnsCount) {
   if (columnsNumber_ == columnsCount) return;
@@ -37,25 +50,10 @@ void PreviewWindow::paintEvent(QPaintEvent *event) {
   DrawCells(&painter);
 }
 
-void PreviewWindow::SetCells() {
-  cellsColors_.resize(rowsNumber_);
-
-  for (uint i = 0; i < rowsNumber_; i++) {
-    cellsColors_[i].resize(columnsNumber_);
-  }
-
-  ResetCellsColor();
-  setFixedSize(GetSize());
-}
-
 void PreviewWindow::ResetCellsColor() {
   for (auto& cell : cellsColors_) {
     cell.fill(kCellDefaultColor);
   }
-}
-
-QSize PreviewWindow::GetSize() const {
-  return QSize(columnsNumber_, rowsNumber_) * kCellSize;
 }
 
 void PreviewWindow::DrawCells(QPainter *painter) {
@@ -73,18 +71,16 @@ void PreviewWindow::DrawCells(QPainter *painter) {
   }
 }
 
-void PreviewWindow::StartNewGame(Figure nextFigure) {
+void PreviewWindow::StartNewGame(Figure nextFigure_) {
+  uint firstCellDafaultValue = -100;
   Figure newFig;
-  score_ = 0;
-  QColor currColor = nextFigure.GetColor();
-  for (auto& row : nextFigure.GetCoordinates()) {
+  QColor currColor = nextFigure_.GetColor();
+  for (auto& row : nextFigure_.GetCoordinates()) {
     for (auto& cell : row) {
-      if (cell.first == -100) continue;
+      if (cell.first == firstCellDafaultValue) continue;
       cellsColors_[abs(cell.first)  - 1][cell.second - 3] = currColor;
     }
   }
   repaint();
 }
-
-//void GameField::lsdNumberChanged() { return score_; };
 

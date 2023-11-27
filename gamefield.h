@@ -49,19 +49,20 @@ class GameField : public QWidget {
 
  private:
   static constexpr uint kCellSize = 20;
-  bool gameOnPause_ = false;
-  bool isEnd_ = false;
+  bool IsGameOnPause_ = false;
+  bool IsGameover_ = false;
   uint rowsNumber_ = 0;
   uint columnsNumber_ = 0;
   QVector<QVector<QColor>> cellsColors_;
-  QVector<QVector<QColor>> cellsColorsTmp_;
+  QVector<QVector<QColor>> cellsColorsDump_;
+  QVector<QColor> firstRow_;
   uint rowsCount_ = 0;
   uint columnsCount_ = 0;
   const QColor kCellDefaultColor = QColor(150, 150, 150);
   const QColor kCellStartColor = QColor(220, 220, 220);
-  uint score_ = 0;
-  Figure currFigure;
-  Figure nextFigure;
+  uint totalScore_ = 0;
+  Figure currFigure_;
+  Figure nextFigure_;
 };
 
 #endif  // GAMEFIELD_H

@@ -19,51 +19,11 @@ GameField::GameField(QWidget *parent) : QWidget{parent} {
 
 uint GameField::GetRowsNumber() const { return rowsNumber_; }
 
-void GameField::SetRowsNumber(uint rowsNumber) {
-  if (rowsNumber_ == rowsNumber) return;
-
-  rowsNumber_ = rowsNumber;
-  emit RowsNumberChanged();
-}
-
 uint GameField::GetColumnsNumber() const { return columnsNumber_; }
 
-void GameField::SetColumnNumber(uint columnsCount) {
-  if (columnsNumber_ == columnsCount) return;
+Figure GameField::GetnextFigure() { return nextFigure_; }
 
-  columnsNumber_ = columnsCount;
-  emit ColumnsNumberChanged();
-}
-
-void GameField::paintEvent(QPaintEvent *event) {
-  Q_UNUSED(event)
-  QPainter painter(this);
-  painter.setPen(QPen(Qt::white, 1, Qt::SolidLine));
-  DrawCells(&painter);
-}
-
-void GameField::SetCells() {
-  cellsColors_.resize(rowsNumber_);
-
-  for (uint i = 0; i < rowsNumber_; i++) {
-    cellsColors_[i].resize(columnsNumber_);
-  }
-
-  ResetCellsColor();
-  setFixedSize(GetSize());
-}
-
-void GameField::ResetCellsColor() {
-  for (auto& cell : cellsColors_) {
-     cell.fill(kCellDefaultColor);
-  }
-}
-
-Figure GameField::GetNextFigure() { return nextFigure; }
-
-QSize GameField::GetSize() const {
-  return QSize(columnsNumber_, rowsNumber_) * kCellSize;
-}
+QSize GameField::GetSize() const { return QSize(columnsNumber_, rowsNumber_) * kCellSize; }
 
 void GameField::DrawCells(QPainter *painter) {
   int positionX = 0;
@@ -80,25 +40,73 @@ void GameField::DrawCells(QPainter *painter) {
   }
 }
 
+void GameField::SetColumnNumber(uint columnsCount) {
+  if (columnsNumber_ == columnsCount) return;
+
+  columnsNumber_ = columnsCount;
+  emit ColumnsNumberChanged();
+}
+
+void GameField::SetRowsNumber(uint rowsNumber) {
+  if (rowsNumber_ == rowsNumber) return;
+
+  rowsNumber_ = rowsNumber;
+  emit RowsNumberChanged();
+}
+
+void GameField::SetCells() {
+  cellsColors_.resize(rowsNumber_);
+
+  for (uint i = 0; i < rowsNumber_; i++) {
+    cellsColors_[i].resize(columnsNumber_);
+  }
+
+  firstRow_.resize(rowsNumber_);
+  firstRow_.fill(kCellStartColor);
+
+  ResetCellsColor();
+  setFixedSize(GetSize());
+}
+
+void GameField::SetCellsColorForStart() {
+  for (auto& cell : cellsColors_) {
+    cell.fill(kCellStartColor);
+  }
+  cellsColorsDump_ = cellsColors_;
+}
+
+void GameField::paintEvent(QPaintEvent *event) {
+  Q_UNUSED(event)
+  QPainter painter(this);
+  painter.setPen(QPen(Qt::white, 1, Qt::SolidLine));
+  DrawCells(&painter);
+}
+
+void GameField::ResetCellsColor() {
+  for (auto& cell : cellsColors_) {
+     cell.fill(kCellDefaultColor);
+  }
+}
+
 void GameField::keyPressEvent(QKeyEvent *event) {
   if (event->key() == Qt::Key_Space) {
-    if (gameOnPause_ == true) {
+    if (IsGameOnPause_ == true) {
       figureMoveTimer_->stop();
-      gameOnPause_ = false;
+      IsGameOnPause_ = false;
     } else {
         figureMoveTimer_->start(500);
-        gameOnPause_ = true;
+        IsGameOnPause_ = true;
     }
   } else if (event->key() == Qt::Key_Down) {
       figureMoveTimer_->setInterval(50);
   } else if (event->key() == Qt::Key_Left) {
-      currFigure.MoveLeft(cellsColorsTmp_);
+      currFigure_.MoveLeft(cellsColorsDump_);
       repaint();
   } else if (event->key() == Qt::Key_Right) {
-      currFigure.MoveRight(cellsColorsTmp_);
+      currFigure_.MoveRight(cellsColorsDump_);
       repaint();
   } else if (event->key() == Qt::Key_Up) {
-      currFigure.RotateFigure(cellsColorsTmp_);
+      currFigure_.RotateFigure(cellsColorsDump_);
       repaint();
   }
 }
@@ -111,11 +119,11 @@ void GameField::keyReleaseEvent(QKeyEvent *event) {
 }
 
 void GameField::UpdateGameField(){
-  cellsColors_ = cellsColorsTmp_;
-  bool isStoped = currFigure.MoveDown(cellsColors_);
-  QVector<QVector<QPair<int, int>>> currCoordinate = currFigure.GetCoordinates();
+  cellsColors_ = cellsColorsDump_;
+  bool isStoped = currFigure_.MoveDown(cellsColors_);
+  QVector<QVector<QPair<int, int>>> currCoordinate = currFigure_.GetCoordinates();
   qDebug() << currCoordinate;
-  QColor currColor = currFigure.GetColor();
+  QColor currColor = currFigure_.GetColor();
   for (auto& row : currCoordinate) {
     for (auto& cell : row) {
       if (cell.first < 0) continue;
@@ -124,59 +132,51 @@ void GameField::UpdateGameField(){
   }
   repaint();
   if (isStoped) {
-    bool isEnd = true;
+    bool IsGameover = true;
     for (auto& row : currCoordinate) {
       for (auto& cell : row) {
-        if (cell.first > 0) isEnd = false;
+        if (cell.first > 0) IsGameover = false;
       }
     }
 
-   uint countColumn = 0;
+   uint countColumns = 0;
    for (auto& row : cellsColors_) {
      for (auto& cell: row) {
-       if(cell != kCellStartColor) { countColumn++; }
+       if(cell != kCellStartColor) { countColumns++; }
      }
-     if (countColumn == 10) {
-       score_ += 500;
+     if (countColumns == columnsCount_) {
+       totalScore_ += 500;
        cellsColors_.remove(cellsColors_.indexOf(row));
-       cellsColors_.push_front(QVector<QColor>{kCellStartColor, kCellStartColor, kCellStartColor, kCellStartColor, kCellStartColor, kCellStartColor, kCellStartColor, kCellStartColor, kCellStartColor, kCellStartColor});
+       cellsColors_.push_front(firstRow_);
      }
 
-     countColumn = 0;
+     countColumns = 0;
    }
 
-   isEnd_ = isEnd;
-   if (isEnd_) {
+   IsGameover_ = IsGameover;
+   if (IsGameover_) {
      figureMoveTimer_->stop();
    }
-   currFigure = nextFigure;
+   currFigure_ = nextFigure_;
    Figure newFig;
-   nextFigure = newFig;
-   cellsColorsTmp_ = cellsColors_;
-   emit lsdNumberChanged(score_);
+   nextFigure_ = newFig;
+   cellsColorsDump_ = cellsColors_;
+   emit lsdNumberChanged(totalScore_);
    emit clearPrevWindow();
-   emit nextFigureChanged(nextFigure);
+   emit nextFigureChanged(nextFigure_);
   }
-}
-
-void GameField::SetCellsColorForStart() {
-  for (auto& cell : cellsColors_) {
-    cell.fill(kCellStartColor);
-  }
-  cellsColorsTmp_ = cellsColors_;
 }
 
 void GameField::StartNewGame() {
   setFocus();
   SetCellsColorForStart();
 
-  qDebug() << "Game Started";
   Figure newFig;
-  nextFigure = newFig;
-  score_ = 0;
+  nextFigure_ = newFig;
+  totalScore_ = 0;
 
   figureMoveTimer_->start(500);
 
-  emit nextFigureChanged(nextFigure);
+  emit nextFigureChanged(nextFigure_);
 }
 
