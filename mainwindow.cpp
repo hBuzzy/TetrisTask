@@ -33,13 +33,10 @@ MainWindow::MainWindow(QWidget *parent)
                                         "   background-color: #2980b9;"
                                         "   color: #bdc3c7;"
                                         "}";
-
     startButton->setStyleSheet(buttonStyle);
     startButton->setGraphicsEffect(shadowEffect);
-
     helpButton->setStyleSheet(buttonStyle);
     helpButton->setGraphicsEffect(shadowEffect);
-
     exitButton->setStyleSheet(buttonStyle);
     exitButton->setGraphicsEffect(shadowEffect);
 
@@ -54,7 +51,6 @@ MainWindow::MainWindow(QWidget *parent)
             exitGame();
         }
     });
-
 
     QVBoxLayout *layout = new QVBoxLayout;
     layout->addWidget(tetrisGrid, Qt::AlignHCenter);
