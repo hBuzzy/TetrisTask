@@ -10,11 +10,17 @@ CONFIG += c++17
 
 SOURCES += \
     gamefield.cpp \
+    gameoverdialog.cpp \
     main.cpp \
+    modaldialog.cpp \
+    tetramino.cpp \
     tetris.cpp
 
 HEADERS += \
     gamefield.h \
+    gameoverdialog.h \
+    modaldialog.h \
+    tetramino.h \
     tetris.h
 
 FORMS += \
