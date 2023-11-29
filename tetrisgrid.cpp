@@ -5,7 +5,7 @@
 #include <QMessageBox>
 
 TetrisGrid::TetrisGrid(QWidget *parent)
-    : QWidget(parent), m_rows_(20), m_cols_(10), m_gridNew_(m_rows_, QVector<int>(m_cols_, 0)), timer_(new QTimer(this)), score_(0) {
+    : QWidget(parent), m_rows_(24), m_cols_(10), timer_(new QTimer(this)), score_(0) {
     m_grid_.resize(m_rows_, QVector<int>(m_cols_, 0));
     setFocusPolicy(Qt::StrongFocus);
     connect(timer_, &QTimer::timeout, this, &TetrisGrid::dropShape);
@@ -137,7 +137,6 @@ void TetrisGrid::rotateShape()
 }
 
 void TetrisGrid::dropShape() {
-
         if (shapeRow_ + currentShape_.size() <= m_rows_) {
             ++shapeRow_;
             if (isCollision()) {
@@ -161,6 +160,7 @@ void TetrisGrid::paintEvent(QPaintEvent *event) {
     int cellSize = qMin(width() / m_cols_, height() / m_rows_);
     drawGrid(painter, cellSize);
     drawShape(painter, cellSize);
+    drawNextShape(painter, cellSize);
 }
 
 void TetrisGrid::drawGrid(QPainter &painter, int cellSize) {
@@ -191,12 +191,26 @@ void TetrisGrid::drawShape(QPainter &painter, int cellSize) {
     }
 }
 
+void TetrisGrid::drawNextShape(QPainter &painter, int cellSize) {
+    for (int i = 0; i < nextShape_.size(); ++i) {
+        for (int j = 0; j < nextShape_[i].size(); ++j) {
+            if (nextShape_[i][j] == 1) {
+                QColor color = Qt::red;
+                QBrush brush(color);
+                painter.setBrush(brush);
+                painter.fillRect((4 + j) * cellSize, (i) * cellSize, cellSize, cellSize, color);
+                painter.drawRect((4 + j) * cellSize, (i) * cellSize, cellSize, cellSize);
+            }
+        }
+    }
+}
+
 QColor TetrisGrid::generateRandomColor() {
     return QColor(rand() % 256, rand() % 256, rand() % 256);
 }
 
 void TetrisGrid::generateNewShape() {
-    shapeRow_ = 0;
+    shapeRow_ = 4;
     shapeCol_ = m_cols_ / 2 - 1;
     int type = rand() % 6;
     currentShape_.clear();

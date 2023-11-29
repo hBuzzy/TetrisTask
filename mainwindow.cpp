@@ -44,7 +44,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(startButton, &QPushButton::clicked, this, &MainWindow::restartGame);
     connect(exitButton, &QPushButton::clicked, this, &MainWindow::exitGame);
     connect(tetrisGrid, SIGNAL(scoreChanged(int)), this, SLOT(updateScore(int)));
-    connect(tetrisGrid, SIGNAL(gameOver()), this, SLOT(exitGame()));
     connect(tetrisGrid, &TetrisGrid::gameOver, [=]() {
         if (!gameOverHandled_) {
             gameOverHandled_ = true;

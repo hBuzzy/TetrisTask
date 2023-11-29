@@ -47,13 +47,13 @@ private:
     QTimer *timer_;
     QVector<QVector<int>> currentShape_;
     QVector<QVector<int>> nextShape_;
-    QVector<QVector<int>> m_gridNew_;
     int shapeRow_;
     int shapeCol_;
     int score_;
     int speed_ = 500;
     void drawGrid(QPainter &painter, int cellSize);
     void drawShape(QPainter &painter, int cellSize);
+    void drawNextShape(QPainter &painter, int cellSize);
     void generateNewShape();
     void checkLines();
     void addCurrentShapeToGridNew();
