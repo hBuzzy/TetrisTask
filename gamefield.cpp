@@ -12,7 +12,7 @@ GameField::GameField(QWidget *parent) : QWidget{parent} {
 
   connect(this, &GameField::InitialisationStarted, this, &GameField::SetCells,
           Qt::QueuedConnection);
-  connect(figureMoveTimer_, &QTimer::timeout, this, &GameField::GamePlay);
+  connect(figureMoveTimer_, &QTimer::timeout, this, &GameField::StartingGame);
 
   emit InitialisationStarted();
 }
@@ -59,7 +59,7 @@ void GameField::ResetCellsColor() {
   }
 }
 
-Figure GameField::GetNextFigure() { return nextFigure; }
+Figure GameField::GetnextFigure() { return nextFigure_; }
 
 QSize GameField::GetSize() const {
   return QSize(columnsNumber_, rowsNumber_) * kCellSize;
@@ -85,22 +85,23 @@ QString GameField::GetScore() {
 }
 
 void GameField::keyPressEvent(QKeyEvent *event) {
+  const uint left = 1;
+  const uint right = 2;
   if (event->key() == Qt::Key_Space) {
-    if (gameOnPause_ == true) {
+    if (isGamePaused_ == true) {
       figureMoveTimer_->stop();
-      gameOnPause_ = false;
+      isGamePaused_ = false;
     } else {
         figureMoveTimer_->start(500);
-        gameOnPause_ = true;
+        isGamePaused_ = true;
     }
   } else if (event->key() == Qt::Key_Down) {
       figureMoveTimer_->setInterval(50);
   } else if (event->key() == Qt::Key_Left) {
-      currFigure.MoveLeft(cellsColorsTmp_);
+      currentFigure_.MoveFigure(cellsColorsDump_, left);
   } else if (event->key() == Qt::Key_Right) {
-      currFigure.MoveRight(cellsColorsTmp_);
-  } else if (event->key() == Qt::Key_Up)
-      currFigure.RotateFigure(cellsColorsTmp_);
+      currentFigure_.MoveFigure(cellsColorsDump_, right);
+  }
 }
 
 
@@ -110,11 +111,16 @@ void GameField::keyReleaseEvent(QKeyEvent *event) {
   }
 }
 
-void GameField::GamePlay(){
-  cellsColors_ = cellsColorsTmp_;
-  bool isStoped = currFigure.MoveDown(cellsColors_);
-  QVector<QVector<QPair<int, int>>> currCoordinate = currFigure.GetCoordinate();
-  QColor currColor = currFigure.GetColor();
+void GameField::StartingGame(){
+  const uint scoreForLine = 500;
+  cellsColors_ = cellsColorsDump_;
+  bool isStoped = currentFigure_.StopMoveDown(cellsColors_);
+  QVector<QVector<QPair<int, int>>> currCoordinate = currentFigure_.GetCoordinates();
+  QVector<QColor> defaultFirstRow;
+  defaultFirstRow.resize(columnsNumber_);
+  defaultFirstRow.fill(kCellStartColor);
+
+  QColor currColor = currentFigure_.GetColor();
   for (auto& row : currCoordinate) {
     for (auto& cell : row) {
       if (cell.first < 0) continue;
@@ -135,10 +141,10 @@ void GameField::GamePlay(){
      for (auto& cell: row) {
        if(cell != kCellStartColor) { countColumn++; }
      }
-     if (countColumn == 10) {
-       score_ += 500;
+     if (countColumn == columnsCount_) {
+       score_ += scoreForLine;
        cellsColors_.remove(cellsColors_.indexOf(row));
-       cellsColors_.push_front(QVector<QColor>{kCellStartColor, kCellStartColor, kCellStartColor, kCellStartColor, kCellStartColor, kCellStartColor, kCellStartColor, kCellStartColor, kCellStartColor, kCellStartColor});
+       cellsColors_.push_front(defaultFirstRow);
      }
 
      countColumn = 0;
@@ -148,13 +154,13 @@ void GameField::GamePlay(){
    if (isEnd_) {
      figureMoveTimer_->stop();
    }
-   currFigure = nextFigure;
-   Figure newFig;
-   nextFigure = newFig;
-   cellsColorsTmp_ = cellsColors_;
+   currentFigure_ = nextFigure_;
+   Figure newFigure;
+   nextFigure_ = newFigure;
+   cellsColorsDump_ = cellsColors_;
    emit lsdNumberChanged(score_);
    emit clearPrevWindow();
-   emit nextFigureChanged(nextFigure);
+   emit nextFigureChanged(nextFigure_);
   }
 }
 
@@ -162,7 +168,7 @@ void GameField::SetCellsColorForStart() {
   for (auto& cell : cellsColors_) {
     cell.fill(kCellStartColor);
   }
-  cellsColorsTmp_ = cellsColors_;
+  cellsColorsDump_ = cellsColors_;
 }
 
 void GameField::StartNewGame() {
@@ -170,12 +176,12 @@ void GameField::StartNewGame() {
   SetCellsColorForStart();
 
   qDebug() << "Game Started";
-  Figure newFig;
-  nextFigure = newFig;
+  Figure newFigure;
+  nextFigure_ = newFigure;
   score_ = 0;
 
   figureMoveTimer_->start(500);
 
-  emit nextFigureChanged(nextFigure);
+  emit nextFigureChanged(nextFigure_);
 }
 

@@ -49,8 +49,8 @@ class PreviewWindow : public QWidget {
   uint columnsCount_ = 0;
   const QColor kCellDefaultColor = QColor(254, 217, 255);
   uint score_ = 0;
-  Figure currFigure;
-  Figure nextFigure;
+  Figure currentFigure_;
+  Figure nextFigure_;
 };
 
 #endif

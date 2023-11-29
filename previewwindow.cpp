@@ -1,4 +1,4 @@
-#include "previewwindow.h"
+﻿#include "previewwindow.h"
 
 #include <QDebug>
 #include <QPainter>
@@ -74,13 +74,17 @@ void PreviewWindow::DrawCells(QPainter *painter) {
 }
 
 void PreviewWindow::StartNewGame(Figure nextFigure) {
-  Figure newFig;
+  Figure newFigure;
+  const uint defoultCoordinateX = -100;
+  const uint startDefoultCoordinateX = 1;
+  const uint startDefoultCoordinateY = 3;
+
   score_ = 0;
-  QColor currColor = nextFigure.GetColor();
-  for (auto& row : nextFigure.GetCoordinate()) {
+  QColor currColor = nextFigure_.GetColor();
+  for (auto& row : nextFigure_.GetCoordinates()) {
     for (auto& cell : row) {
-      if (cell.first == -100) continue;
-      cellsColors_[abs(cell.first)  - 1][cell.second - 3] = currColor;
+      if (cell.first == defoultCoordinateX) continue;
+      cellsColors_[abs(cell.first) - startDefoultCoordinateX][cell.second - startDefoultCoordinateY] = currColor;
     }
   }
   repaint();

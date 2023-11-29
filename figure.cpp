@@ -14,70 +14,76 @@ Figure::Figure() {
   uint rowCount = 3;
   uint columnCount = 3;
   uint defoultValue = -100;
+
+  const uint figureStick = 1;
+  const uint figureL = 2;
+  const uint figureSqr = 3;
+  const uint figureT = 4;
+
   for (int i = 0; i < rowCount; i++) {
       QVector<QPair<int, int>> row;
       for (int j = 0; j < columnCount; j++) {
           QPair<int, int> pairValue(0, 0);
           row.append(pairValue);
       }
-      coordinate_.append(row);
+      coordinates_.append(row);
   }
 
   switch (figureType) {
-    case 1:
-      coordinate_[0][0] = QPair<int, int>(defoultValue, defoultValue);
-      coordinate_[0][1] = QPair<int, int>(-3, 4);
-      coordinate_[0][2] = QPair<int, int>(defoultValue, defoultValue);
+    case figureStick:
+      coordinates_[0][0] = QPair<int, int>(defoultValue, defoultValue);
+      coordinates_[0][1] = QPair<int, int>(-3, 4);
+      coordinates_[0][2] = QPair<int, int>(defoultValue, defoultValue);
 
-      coordinate_[1][0] = QPair<int, int>(defoultValue, defoultValue);
-      coordinate_[1][1] = QPair<int, int>(-2, 4);
-      coordinate_[1][2] = QPair<int, int>(defoultValue, defoultValue);
+      coordinates_[1][0] = QPair<int, int>(defoultValue, defoultValue);
+      coordinates_[1][1] = QPair<int, int>(-2, 4);
+      coordinates_[1][2] = QPair<int, int>(defoultValue, defoultValue);
 
-      coordinate_[2][0] = QPair<int, int>(defoultValue, defoultValue);
-      coordinate_[2][1] = QPair<int, int>(-1, 4);
-      coordinate_[2][2] = QPair<int, int>(defoultValue, defoultValue);
-
-      break;
-    case 2:
-      coordinate_[0][0] = QPair<int, int>(defoultValue, defoultValue);
-      coordinate_[0][1] = QPair<int, int>(-3, 4);
-      coordinate_[0][2] = QPair<int, int>(defoultValue, defoultValue);
-
-      coordinate_[1][0] = QPair<int, int>(defoultValue, defoultValue);
-      coordinate_[1][1] = QPair<int, int>(-2, 4);
-      coordinate_[1][2] = QPair<int, int>(defoultValue, defoultValue);
-
-      coordinate_[2][0] = QPair<int, int>(defoultValue, defoultValue);
-      coordinate_[2][1] = QPair<int, int>(-1, 4);
-      coordinate_[2][2] = QPair<int, int>(-1, 5);
+      coordinates_[2][0] = QPair<int, int>(defoultValue, defoultValue);
+      coordinates_[2][1] = QPair<int, int>(-1, 4);
+      coordinates_[2][2] = QPair<int, int>(defoultValue, defoultValue);
 
       break;
-    case 3:
-      coordinate_[0][0] = QPair<int, int>(defoultValue, defoultValue);
-      coordinate_[0][1] = QPair<int, int>(defoultValue, defoultValue);
-      coordinate_[0][2] = QPair<int, int>(defoultValue, defoultValue);
+    case figureL:
+      coordinates_[0][0] = QPair<int, int>(defoultValue, defoultValue);
+      coordinates_[0][1] = QPair<int, int>(-3, 4);
+      coordinates_[0][2] = QPair<int, int>(defoultValue, defoultValue);
 
-      coordinate_[1][0] = QPair<int, int>(defoultValue, defoultValue);
-      coordinate_[1][1] = QPair<int, int>(-2, 4);
-      coordinate_[1][2] = QPair<int, int>(-2, 5);
+      coordinates_[1][0] = QPair<int, int>(defoultValue, defoultValue);
+      coordinates_[1][1] = QPair<int, int>(-2, 4);
+      coordinates_[1][2] = QPair<int, int>(defoultValue, defoultValue);
 
-      coordinate_[2][0] = QPair<int, int>(defoultValue, defoultValue);
-      coordinate_[2][1] = QPair<int, int>(-1, 4);
-      coordinate_[2][2] = QPair<int, int>(-1, 5);
+      coordinates_[2][0] = QPair<int, int>(defoultValue, defoultValue);
+      coordinates_[2][1] = QPair<int, int>(-1, 4);
+      coordinates_[2][2] = QPair<int, int>(-1, 5);
 
       break;
-    case 4:
-      coordinate_[0][0] = QPair<int, int>(defoultValue, defoultValue);
-      coordinate_[0][1] = QPair<int, int>(defoultValue, defoultValue);
-      coordinate_[0][2] = QPair<int, int>(defoultValue, defoultValue);
+    case figureSqr:
+      coordinates_[0][0] = QPair<int, int>(defoultValue, defoultValue);
+      coordinates_[0][1] = QPair<int, int>(defoultValue, defoultValue);
+      coordinates_[0][2] = QPair<int, int>(defoultValue, defoultValue);
 
-      coordinate_[1][0] = QPair<int, int>(defoultValue, defoultValue);
-      coordinate_[1][1] = QPair<int, int>(-2, 4);
-      coordinate_[1][2] = QPair<int, int>(defoultValue, defoultValue);
+      coordinates_[1][0] = QPair<int, int>(defoultValue, defoultValue);
+      coordinates_[1][1] = QPair<int, int>(-2, 4);
+      coordinates_[1][2] = QPair<int, int>(-2, 5);
 
-      coordinate_[2][0] = QPair<int, int>(-1, 3);
-      coordinate_[2][1] = QPair<int, int>(-1, 4);
-      coordinate_[2][2] = QPair<int, int>(-1, 5);
+      coordinates_[2][0] = QPair<int, int>(defoultValue, defoultValue);
+      coordinates_[2][1] = QPair<int, int>(-1, 4);
+      coordinates_[2][2] = QPair<int, int>(-1, 5);
+
+      break;
+    case figureT:
+      coordinates_[0][0] = QPair<int, int>(defoultValue, defoultValue);
+      coordinates_[0][1] = QPair<int, int>(defoultValue, defoultValue);
+      coordinates_[0][2] = QPair<int, int>(defoultValue, defoultValue);
+
+      coordinates_[1][0] = QPair<int, int>(defoultValue, defoultValue);
+      coordinates_[1][1] = QPair<int, int>(-2, 4);
+      coordinates_[1][2] = QPair<int, int>(defoultValue, defoultValue);
+
+      coordinates_[2][0] = QPair<int, int>(-1, 3);
+      coordinates_[2][1] = QPair<int, int>(-1, 4);
+      coordinates_[2][2] = QPair<int, int>(-1, 5);
 
       break;
   }
@@ -99,35 +105,23 @@ Figure::Figure() {
   }
 }
 
-void Figure::MoveLeft(QVector<QVector<QColor>> coordinateGlobal) {
-  if (CheckColisium(coordinateGlobal, 1)) {
-    for (auto& row : coordinate_) {
+void Figure::MoveFigure(QVector<QVector<QColor>> globalCoordinates, uint moveSide) {
+  const uint left = 1;
+  const uint right = 2;
+  if (HasCollisions(globalCoordinates, moveSide)) {
+    for (auto& row : coordinates_) {
       for (auto& cell : row) {
           if (cell == QPair<int, int>(0, 0)) continue;
-          cell.second -= 1;
+          if (moveSide == left) { cell.second -= 1; }
+          else { cell.second += 1; }
       }
     }
   }
 }
 
-void Figure::MoveRight(QVector<QVector<QColor>> coordinateGlobal) {
-  if (CheckColisium(coordinateGlobal, 2)) {
-    for (auto& row : coordinate_) {
-      for (auto& cell : row) {
-          if (cell == QPair<int, int>(0, 0)) continue;
-          cell.second += 1;
-      }
-    }
-  }
-}
-
-void Figure::RotateFigure(QVector<QVector<QColor>> coordinateGlobal) {
-
-}
-
-bool Figure::MoveDown(QVector<QVector<QColor>> coordinateGlobal) {
-  if (CheckColisium(coordinateGlobal, 3)) {
-    for (auto& row : coordinate_) {
+bool Figure::StopMoveDown(QVector<QVector<QColor>> globalCoordinates) {
+  if (HasCollisions(globalCoordinates, 3)) {
+    for (auto& row : coordinates_) {
       for (auto& cell : row) {
           if (cell == QPair<int, int>(0, 0)) continue;
           cell.first += 1;
@@ -137,17 +131,17 @@ bool Figure::MoveDown(QVector<QVector<QColor>> coordinateGlobal) {
   return false;
 }
 
-bool Figure::CheckColisium(QVector<QVector<QColor>> coordinateGlobal, int side) {
+bool Figure::HasCollisions(QVector<QVector<QColor>> globalCoordinates, int side) {
   QPair<int, int> defaultValue(-100, -100);
   const QColor kCellStartColor = QColor(254, 217, 255);
   switch (side) {
     case(1):
-      for (auto& row : coordinate_) {
+      for (auto& row : coordinates_) {
         for (auto& cell : row) {
           if (cell == defaultValue) continue;
           if (cell.first < 0) continue;
           if (cell.second <= 0) { return false; }
-          if (coordinateGlobal[cell.first][cell.second - 1] != kCellStartColor)
+          if (globalCoordinates[cell.first][cell.second - 1] != kCellStartColor)
             return false;
         }
       }
@@ -155,12 +149,12 @@ bool Figure::CheckColisium(QVector<QVector<QColor>> coordinateGlobal, int side) 
       break;
 
       case(2):
-        for (auto& row : coordinate_) {
+        for (auto& row : coordinates_) {
           for (auto& cell : row) {
               if (cell == defaultValue) continue;
               if (cell.first < 0) continue;
               if (cell.second >= 9) { return false; }
-              if (coordinateGlobal[cell.first][cell.second + 1] != kCellStartColor)
+              if (globalCoordinates[cell.first][cell.second + 1] != kCellStartColor)
                   return false;
           }
         }
@@ -168,12 +162,12 @@ bool Figure::CheckColisium(QVector<QVector<QColor>> coordinateGlobal, int side) 
         break;
 
       case(3):
-        for (auto& row : coordinate_) {
+        for (auto& row : coordinates_) {
           for (auto& cell : row) {
               if (cell == defaultValue) continue;
               if (cell.first < 0) continue;
               if (cell.first == 19) { return false; }
-              if ((coordinateGlobal[cell.first + 1][cell.second] != kCellStartColor)) { return false; }
+              if ((globalCoordinates[cell.first + 1][cell.second] != kCellStartColor)) { return false; }
           }
         }
         return true;
@@ -183,6 +177,6 @@ bool Figure::CheckColisium(QVector<QVector<QColor>> coordinateGlobal, int side) 
 
 QColor Figure::GetColor() { return kCellColor; }
 
-QVector<QVector<QPair<int, int>>> Figure::GetCoordinate() { return coordinate_; }
+QVector<QVector<QPair<int, int>>> Figure::GetCoordinates() { return coordinates_; }
 
 

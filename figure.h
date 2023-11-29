@@ -7,19 +7,17 @@ class Figure final {
 
  public:
   explicit Figure();
-  QVector<QVector<QPair<int, int>>> GetCoordinate();
+  QVector<QVector<QPair<int, int>>> GetCoordinates();
   QColor GetColor();
-  void RotateFigure(QVector<QVector<QColor>> coordinateGlobal);
-  void MoveRight(QVector<QVector<QColor>> coordinateGlobal);
-  void MoveLeft(QVector<QVector<QColor>> coordinateGlobal);
-  bool MoveDown(QVector<QVector<QColor>> coordinateGlobal);
+  void MoveFigure(QVector<QVector<QColor>> globalCoordinates, uint moveSide);
+  bool StopMoveDown(QVector<QVector<QColor>> globalCoordinates);
 
  protected:
-  bool CheckColisium(QVector<QVector<QColor>>, int);
+  bool HasCollisions(QVector<QVector<QColor>>, int);
 
  private:
    QColor kCellColor;
-   QVector<QVector<QPair<int, int>>> coordinate_;
+   QVector<QVector<QPair<int, int>>> coordinates_;
 
 };
 
