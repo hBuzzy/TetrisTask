@@ -13,10 +13,8 @@ public:
     explicit ModalDialog(QWidget *parent = nullptr);
 
 private:
-
-    QPushButton *okButton;
-    QLabel *label;
-
+    QPushButton *okButton_;
+    QLabel *label_;
 };
 
 #endif // MODALDIALOG_H

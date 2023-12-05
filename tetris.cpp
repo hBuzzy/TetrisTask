@@ -10,144 +10,142 @@
 Tetris::Tetris(QWidget *parent) : QMainWindow(parent), ui(new Ui::Tetris) {
     ui->setupUi(this);
 
+    baseSpeed_ = 400;
+    boostSpeed_ = 10;
+
     this->setMinimumSize(1200, 800);
     this->setMaximumSize(1200, 800);
 
-    lcdNumber = new QLCDNumber;
-    lcdNumber->setFixedSize(200,50);
-    lcdNumber->setDigitCount(6);
-    lcdNumber->display("000000");
+    scoreCounter_ = new QLCDNumber;
+    scoreCounter_->setFixedSize(200, 50);
+    scoreCounter_->setDigitCount(6);
+    scoreCounter_->display("000000");
 
+    nextFigureGrid_ = new NextFigureGameGrid(this);
+    gamefield_ = new GameField(this);
 
-    gamefield = new GameField(this);
-    gamefield->setFixedSize(601,721);
-
-    QLabel *labelPoints = new QLabel;
-
-    labelPoints->setText("привет");
+    gamefield_->setFixedSize(601, 721);
 
     QPushButton *newGameButton = new QPushButton("Новая игра");
 
     QGridLayout *gridLayout = new QGridLayout;
-
-    gridLayout->addWidget(labelPoints,1, 0);
-    gridLayout->addWidget(gamefield, 1, 1, Qt::AlignHCenter);
-    gridLayout->addWidget(lcdNumber, 1, 2, Qt::AlignHCenter);
+    gridLayout->addWidget(nextFigureGrid_, 1, 0, Qt::AlignHCenter);
+    gridLayout->addWidget(gamefield_, 1, 1, Qt::AlignHCenter);
+    gridLayout->addWidget(scoreCounter_, 1, 2, Qt::AlignHCenter);
     gridLayout->addWidget(newGameButton, 0, 1, Qt::AlignHCenter);
 
     setCentralWidget(new QWidget(this));
     centralWidget()->setLayout(gridLayout);
 
-    // Создаем таймер для движения вниз
-    timer = new QTimer(this);
-    connect(newGameButton, &QPushButton::clicked, this, &Tetris::startNewGame);
-    connect(timer, &QTimer::timeout, gamefield, &GameField::moveFigure);
-    connect(gamefield, &GameField::FigureSpawned, this, &Tetris::restoreBasedInterval);
-    connect(gamefield, &GameField::CurrentFigureChanged, this, &Tetris::updateGameField);
-    connect(gamefield, &GameField::ChangeWinPoints, this, &Tetris::updateWinPoints);
-    connect(gamefield, &GameField::GameOver, this, &Tetris::openEndGameDialog);
+    timer_ = new QTimer(this);
+
+    connect(newGameButton, &QPushButton::clicked, nextFigureGrid_, &NextFigureGameGrid::SetNextFigure);
+    connect(newGameButton, &QPushButton::clicked, this, &Tetris::UpdateGameFieldFigure);
+    connect(newGameButton, &QPushButton::clicked, this, &Tetris::StartNewGame);
+    connect(gamefield_, &GameField::FigureSpawned, nextFigureGrid_, &NextFigureGameGrid::SetNextFigure);
+    connect(nextFigureGrid_, &NextFigureGameGrid::nextFigureChanged, this, &Tetris::UpdateGameFieldFigure);
+    connect(timer_, &QTimer::timeout, gamefield_, &GameField::MoveFigure);
+    connect(gamefield_, &GameField::FigureSpawned, this, &Tetris::RestoreBasedInterval);
+    connect(gamefield_, &GameField::CurrentFigureChanged, this, &Tetris::UpdateGameField);
+    connect(gamefield_, &GameField::ChangeWinPoints, this, &Tetris::UpdateWinPoints);
+    connect(gamefield_, &GameField::GameOver, this, &Tetris::OpenEndGameDialog);
 }
 
 Tetris::~Tetris() { delete ui; }
 
-
-void Tetris::updateGameField() {
-    gamefield->update();
+void Tetris::UpdateGameField() {
+    gamefield_->update();
 }
 
-void Tetris::updateWinPoints() {
-    int currentCountPoints = gamefield->GetWinPoints();
-
-    QString newDisplayValue = QString::number(currentCountPoints).rightJustified(lcdNumber->digitCount(), '0');
-    lcdNumber->display(newDisplayValue);
+void Tetris::UpdateGameFieldFigure() {
+    gamefield_->SetNextFigureGrid(nextFigureGrid_->GetNextFigure());
 }
 
-void Tetris::restoreBasedInterval() {
-    if (timer->interval() != 400) {
-        timer->setInterval(400);
-        timer->start();
+void Tetris::UpdateWinPoints() {
+    int currentCountPoints = gamefield_->GetWinPoints();
+    QString newDisplayValue = QString::number(currentCountPoints).rightJustified(scoreCounter_->digitCount(), '0');
+    scoreCounter_->display(newDisplayValue);
+}
+
+void Tetris::RestoreBasedInterval() {
+    if (timer_->interval() != baseSpeed_) {
+        timer_->setInterval(baseSpeed_);
+        timer_->start();
     }
 }
 
-void Tetris::gamePause() {
-    timer->stop();
-    openModalDialog();
+void Tetris::GamePause() {
+    timer_->stop();
+    OpenModalDialog();
 }
 
-void Tetris::startNewGame() {
-    timer->stop();
+void Tetris::StartNewGame() {
+    int CenterPointX = 2;
+    timer_->stop();
+    gamefield_->SetWinPoints(0);
+    UpdateWinPoints();
 
-    gamefield->SetWinPoints(0);
-    updateWinPoints();
+    gamefield_->ClearGameGrid();
+    gamefield_->SpawnNextFigure();
+    gamefield_->SetFigurePosition(0, gamefield_->GetColumnsNumber() / CenterPointX);
 
-    gamefield->clearGameGrid();
-    gamefield->spawnNextFigure();
-    gamefield->SetFigurePosition(0, gamefield->GetColumnsNumber() / 2);
-
-    gamefield->setFocus();
-
-    timer->start(400);
+    gamefield_->setFocus();
+    timer_->start(baseSpeed_);
 }
 
-void Tetris::endGame() {
-    timer->stop();
-    gamefield->clearGameGrid();
+void Tetris::EndGame() {
+    timer_->stop();
+    gamefield_->ClearGameGrid();
+    gamefield_->SetWinPoints(0);
 }
 
-void Tetris::openModalDialog() {
+void Tetris::OpenModalDialog() {
     ModalDialog dialog(this);
     dialog.exec();
-    timer->start(400);
+    timer_->start(400);
 }
 
-
-
-void Tetris::openEndGameDialog() {
+void Tetris::OpenEndGameDialog() {
     GameOverDialog dialog(this);
     dialog.exec();
-    endGame();
+    EndGame();
 }
 
 void Tetris::keyPressEvent(QKeyEvent *event) {
-    int currRow = gamefield->GetCurrentFigureRow();
-    int currColumn = gamefield->GetCurrentFigureColumn();
+    int currRow = gamefield_->GetCurrentFigureRow();
+    int currColumn = gamefield_->GetCurrentFigureColumn();
 
     if (event->key() == Qt::Key_Space) {
-        gamePause();
+        GamePause();
     }
 
     if (event->key() == Qt::Key_Right) {
-        if(!gamefield->CheckCollisionMoveRight()) {
-            gamefield->SetFigurePosition(currRow, currColumn + 1);
+        if(!gamefield_->HasCollisionMove(0, 1)) {
+            gamefield_->SetFigurePosition(currRow, currColumn + 1);
         }
     }
 
     if (event->key() == Qt::Key_Left) {
-        if(!gamefield->CheckCollisionMoveLeft()) {
-            gamefield->SetFigurePosition(currRow, currColumn - 1);
+        if(!gamefield_->HasCollisionMove(0, -1)) {
+            gamefield_->SetFigurePosition(currRow, currColumn - 1);
         }
     }
 
     if (event->key() == Qt::Key_Down) {
-        timer->start(10);
+        timer_->start(boostSpeed_);
     }
 
     if (event->key() == Qt::Key_Up) {
-        gamefield->GetRotateCurrentFigure();
+        gamefield_->GetRotateCurrentFigure();
 
-        QVector<QVector<int>> CurrentFigure = gamefield->GetCurrentFigure();
+        QVector<QVector<int>> CurrentFigure = gamefield_->GetCurrentFigure();
 
-        if(!gamefield->CheckCollisionRotate()) {
-            gamefield->GetCurrentFigure();
-            gamefield->update();
-            //qDebug() << "Пересечений нет";
+        if(!gamefield_->HasCollisionRotation()) {
+            gamefield_->GetCurrentFigure();
+            gamefield_->update();
         } else {
-            gamefield->SetFigurePosition(currRow, currColumn - CurrentFigure[0].size() + 1);
-            gamefield->update();
-            //qDebug() << "Пересечения есть";
-            //qDebug() << CurrentFigure[0].size();
+            gamefield_->SetFigurePosition(currRow, currColumn - CurrentFigure[0].size() + 1);
+            gamefield_->update();
         }
     }
 }
-
-

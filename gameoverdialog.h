@@ -13,10 +13,8 @@ public:
     explicit GameOverDialog(QWidget *parent = nullptr);
 
 private:
-
-    QPushButton *newTryButton;
-    QLabel *label;
-
+    QPushButton *newTryButton_;
+    QLabel *label_;
 };
 
 #endif // GAMEOVERDIALOG_H

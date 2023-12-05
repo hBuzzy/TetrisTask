@@ -1,7 +1,12 @@
 #ifndef GAMEFIELD_H
 #define GAMEFIELD_H
 
+#include "tetramino.h"
+#include "nextfiguregamegrid.h"
+
 #include <QWidget>
+
+class Tetris;
 
 class GameField : public QWidget {
   Q_OBJECT
@@ -23,6 +28,8 @@ class GameField : public QWidget {
     void GameOver();
 
  public:
+    void SetNextFigureGrid(QVector<QVector<int>> fig);
+
     uint GetRowsNumber() const;
     void SetRowsNumber(uint newRowsNumber);
 
@@ -31,37 +38,32 @@ class GameField : public QWidget {
 
     void SetFigurePosition(int row, int column);
 
-    void spawnNextFigure();
-    void updateGameGrid();
+    void SpawnNextFigure();
+    void UpdateGameGrid();
 
-    bool CheckCollision();
+    bool HasCollisionMove(int xO, int yO);
 
-    bool CheckCollisionMoveLeft();
-    bool CheckCollisionMoveRight();
-    bool CheckCollisionRotate();
+    bool HasCollisionRotation();
 
     QVector<QVector<int>> GetCurrentFigure();
     QVector<QVector<int>> GetRotateCurrentFigure();
 
-    bool CheckFullLine(int row);
-    bool CheckFullColumn(int column);
-
-
-    void CheckLine();
-    void CheckColumn();
+    bool HasFullLine(int row);
+    void CheckingLine();
 
     void RemoveFullLine(int row);
 
     int GetWinPoints();
 
-    void moveFigure();
+    void MoveFigure();
+
+    void GetGameOver();
 
     uint GetCurrentFigureRow();
     uint GetCurrentFigureColumn();
 
-    void clearGameGrid();
+    void ClearGameGrid();
     void SetWinPoints(int points);
-
 
 protected:
     void paintEvent(QPaintEvent *event);
@@ -70,24 +72,25 @@ protected:
     uint rowsNumber_ = 0;
     uint columnsNumber_ = 0;
     int currentRow_ = 0;
-    QVector<QVector<int>> gridGame;
 
-    int blockSize = 30;
+    int blockSize_ = 30;
+    int winPoints_ = 0;
 
-    int WinPoints = 0;
-
-    bool isLineFull = true;
-    bool isGameOver = false;
+    bool isLineFull_ = true;
+    bool isGameOver_ = false;
 
     QVector<QVector<int>> currentFigure_;
+    QVector<QVector<int>> nextFigure_;
 
-    QVector<QVector<int>> GameGrid_; // Поле с информацией о заполнении поля фигурами
+    QVector<QVector<int>> gameGrid_;
 
     uint currentFigureRow_;
     uint currentFigureColumn_;
 
-    QColor colorFigure;
+    QColor figureColor_;
 
+    Tetramino *tetraminoGeneratorFirst_;
+    NextFigureGameGrid *nextGameGrid_;
 };
 
 #endif  // GAMEFIELD_H

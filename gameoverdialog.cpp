@@ -3,12 +3,12 @@
 GameOverDialog::GameOverDialog(QWidget *parent) : QDialog{parent} {
     QVBoxLayout *layout = new QVBoxLayout(this);
 
-    label = new QLabel("Вы проиграли!", this);
-    layout->addWidget(label);
+    label_ = new QLabel("Вы проиграли!", this);
+    layout->addWidget(label_);
 
-    newTryButton = new QPushButton("Попробуйте еще раз!", this);
-    connect(newTryButton, &QPushButton::clicked, this, &QDialog::accept);
-    layout->addWidget(newTryButton);
+    newTryButton_ = new QPushButton("Попробуйте еще раз!", this);
+    connect(newTryButton_, &QPushButton::clicked, this, &QDialog::accept);
+    layout->addWidget(newTryButton_);
 
     setLayout(layout);
 }

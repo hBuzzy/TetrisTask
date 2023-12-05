@@ -6,10 +6,20 @@
 #include <QTimer>
 #include <QVector>
 
-GameField::GameField(QWidget *parent) : QWidget{parent} {
+GameField::GameField(QWidget *parent) : QWidget(parent) {
     setStyleSheet("border: 4px solid black;");
 
-  emit InitialisationStarted();
+    SetColumnNumber(20);
+    SetRowsNumber(24);
+
+    gameGrid_ = QVector<QVector<int>>(rowsNumber_, QVector<int>(columnsNumber_, 0));
+
+    currentFigureRow_ = 0;
+    currentFigureColumn_ = 0;
+}
+
+void GameField::SetNextFigureGrid(QVector<QVector<int>> fig) {
+    nextFigure_ = fig;
 }
 
 uint GameField::GetRowsNumber() const { return rowsNumber_; }
@@ -33,77 +43,17 @@ void GameField::SetColumnNumber(uint columnsCount) {
 }
 
 void GameField::SetFigurePosition(int row, int column) {
-    if (column >= 0 && column + currentFigure_[0].size() <= columnsNumber_ && GameGrid_[row][column] != 1) {
+    if (column >= 0 && column + currentFigure_[0].size() <= columnsNumber_ && gameGrid_[row][column] != 1) {
         currentFigureRow_ = row;
         currentFigureColumn_ = column;
     }
     update();
 }
 
-void GameField::spawnNextFigure() {
-
-        int randNumb = 1 + rand() % 7;
-        //int randNumb = 4;
-
-        switch (randNumb) {
-        case 1:
-            currentFigure_ = {
-                {1},
-                {1},
-                {1},
-                {1}
-            };
-            colorFigure = Qt::cyan;
-            break;
-        case 2:
-            currentFigure_ = {
-                {0, 1},
-                {0, 1},
-                {1, 1}
-            };
-            colorFigure = Qt::magenta;
-            break;
-        case 3:
-            currentFigure_ = {
-                {1, 0},
-                {1, 0},
-                {1, 1}
-            };
-            colorFigure = Qt::blue;
-            break;
-        case 4:
-            currentFigure_ = {
-                {1, 1},
-                {1, 1}
-            };
-            colorFigure = Qt::yellow;
-            break;
-        case 5:
-            currentFigure_ = {
-                {1, 1, 0},
-                {0, 1, 1}
-            };
-            colorFigure = Qt::green;
-            break;
-        case 6:
-            currentFigure_ = {
-                {0, 1, 0},
-                {1, 1, 1}
-            };
-            colorFigure = Qt::gray;
-            break;
-        case 7:
-            currentFigure_ = {
-                {0, 1, 1},
-                {1, 1, 0}
-            };
-            colorFigure = Qt::red;
-            break;
-        default:
-            break;
-        }
-
-        emit FigureSpawned();
+void GameField::SpawnNextFigure() {
+    currentFigure_ = nextFigure_;
+    figureColor_ = Qt::blue;
+    emit FigureSpawned();
 }
 
 QVector<QVector<int>> GameField::GetCurrentFigure() {
@@ -133,30 +83,27 @@ QVector<QVector<int>> GameField::GetRotateCurrentFigure() {
     return currentFigure_;
 }
 
-
-void GameField::updateGameGrid() {
+void GameField::UpdateGameGrid() {
     for (int i = 0; i < currentFigure_.size(); ++i) {
         for (int j = 0; j < currentFigure_[0].size(); ++j) {
             if (currentFigure_[i][j] == 1) {
                 int x = currentFigureRow_ + i;
                 int y = currentFigureColumn_ + j;
-
-                CheckLine();
-                //CheckColumn();
-                GameGrid_[x][y] = 1;
+                CheckingLine();
+                gameGrid_[x][y] = 1;
             }
         }
     }
 }
 
-bool GameField::CheckCollision() {
+bool GameField::HasCollisionMove(int x0, int y0) {
     for (int i = 0; i < currentFigure_.size(); i++) {
         for (int j = 0; j < currentFigure_[0].size(); j++) {
             if (currentFigure_[i][j] == 1) {
-                int x = currentFigureRow_ + i + 1;
-                int y = currentFigureColumn_ + j;
+                int x = currentFigureRow_ + i + x0;
+                int y = currentFigureColumn_ + j + y0;
 
-                if (x < rowsNumber_ && GameGrid_[x][y] == 1) {
+                if (x < 0 || x >= rowsNumber_ || y < 0 || y >= columnsNumber_ || gameGrid_[x][y] == 1) {
                     return true;
                 }
             }
@@ -165,48 +112,14 @@ bool GameField::CheckCollision() {
     return false;
 }
 
-
-bool GameField::CheckCollisionMoveLeft() {
-    for (int i = 0; i < currentFigure_.size(); i++) {
-        for (int j = 0; j < currentFigure_[0].size(); j++) {
-            if (currentFigure_[i][j] == 1) {
-                int x = currentFigureRow_ + i;
-                int y = currentFigureColumn_ + j - 1;
-
-                if (y < 0 || (x < rowsNumber_ && GameGrid_[x][y] == 1)) {
-                    return true;
-                }
-            }
-        }
-    }
-    return false;
-}
-
-bool GameField::CheckCollisionMoveRight() {
-    for (int i = 0; i < currentFigure_.size(); i++) {
-        for (int j = 0; j < currentFigure_[0].size(); j++) {
-            if (currentFigure_[i][j] == 1) {
-                int x = currentFigureRow_ + i;
-                int y = currentFigureColumn_ + j + 1;
-
-                if (y >= columnsNumber_ || (x < rowsNumber_ && GameGrid_[x][y] == 1)) {
-                    return true;
-                }
-            }
-        }
-    }
-    return false;
-}
-
-bool GameField::CheckCollisionRotate() {
-
+bool GameField::HasCollisionRotation() {
     for (int i = 0; i < currentFigure_.size(); i++) {
         for (int j = 0; j < currentFigure_[0].size(); j++) {
             if (currentFigure_[i][j] == 1) {
                 int x = currentFigureRow_ + i;
                 int y = currentFigureColumn_ + j;
 
-                if (x >= rowsNumber_ || y < 0 || y >= columnsNumber_ || GameGrid_[x][y] == 1) {
+                if (x >= rowsNumber_ || y < 0 || y >= columnsNumber_ || gameGrid_[x][y] == 1) {
                     return true;
                 }
             }
@@ -215,18 +128,9 @@ bool GameField::CheckCollisionRotate() {
     return false;
 }
 
-bool GameField::CheckFullLine(int row) {
+bool GameField::HasFullLine(int row) {
     for(int j = 0; j < columnsNumber_; j++) {
-        if(GameGrid_[row][j] != 1) {
-            return false;
-        }
-    }
-    return true;
-}
-
-bool GameField::CheckFullColumn(int column) {
-    for (int i = 0; i < rowsNumber_; i++) {
-        if (GameGrid_[i][column] != 1) {
+        if(gameGrid_[row][j] != 1) {
             return false;
         }
     }
@@ -235,82 +139,67 @@ bool GameField::CheckFullColumn(int column) {
 
 void GameField::RemoveFullLine(int row) {
     for (int j = 0; j < columnsNumber_; j++) {
-        GameGrid_[row][j] = 0;
+        gameGrid_[row][j] = 0;
     }
 
     for(int k = row;k > 0;k--) {
-        for(int j = 0;j < columnsNumber_;j++) {
-            GameGrid_[k][j] = GameGrid_[k-1][j];
+        for(int j = 0;j < columnsNumber_; j++) {
+            gameGrid_[k][j] = gameGrid_[k-1][j];
         }
     }
-
 }
 
 int GameField::GetWinPoints() {
-    return WinPoints;
+    return winPoints_;
 }
 
-// Основная функция
-void GameField::CheckLine() {
+void GameField::CheckingLine() {
     for(int i = rowsNumber_ - 1; i >= 0; i--) {
-        if (CheckFullLine(i)) {
+        if (HasFullLine(i)) {
             RemoveFullLine(i);
-            WinPoints += 100;
+            winPoints_ += 100;
             emit ChangeWinPoints();
-            qDebug() << "Ваши очки = " << WinPoints;
         }
     }
 }
 
-void GameField::CheckColumn() {
-    for(int j = columnsNumber_ - 1; j >= 0; j--) {
-        if (CheckFullColumn(j)) {
-            //emit GameOver();
-            isGameOver = true;
-            qDebug() << "Заполнен столбец" << j;
-        }
-    }
-}
+void GameField::MoveFigure() {
+    GetGameOver();
+    int CenterPointX = 2;
 
-void GameField::moveFigure() {
-    CheckColumn();
-
-    if(!isGameOver) {
-        // Проверка, не касается ли текущая фигура нижней границы поля
+    if(!isGameOver_) {
         if (currentFigureRow_ + currentFigure_.size() < rowsNumber_) {
-            bool isHaveCollision = CheckCollision();
+            bool HasCollision = HasCollisionMove(1, 0);
 
-            if (isHaveCollision) {
-                // Если столкнулись с другой фигурой, сохраняем текущую фигуру и спавним новую
-                qDebug() << "коснулись другую фигуру";
-                updateGameGrid();
-                spawnNextFigure();
-                SetFigurePosition(0, columnsNumber_ / 2);
-                CheckLine();
+
+            if (HasCollision) {
+                UpdateGameGrid();
+                SpawnNextFigure();
+                SetFigurePosition(0, columnsNumber_ / CenterPointX);
+                CheckingLine();
             } else {
                 SetFigurePosition(currentFigureRow_ + 1, currentFigureColumn_);
             }
         } else {
-            // Если достигли нижней границы, сохраняем текущую фигуру и спавним новую
-            qDebug() << "Достигли нижнюю границу";
-            updateGameGrid();
-            spawnNextFigure();
-            SetFigurePosition(0, columnsNumber_ / 2);
-            CheckLine();
+            UpdateGameGrid();
+            SpawnNextFigure();
+            SetFigurePosition(0, columnsNumber_ / CenterPointX);
+            CheckingLine();
         }
-
-        //qDebug() << "currentFigureRow_ = " << currentFigureRow_;
-
         update();
     } else {
-        qDebug() << "Вы проиграли";
-        isGameOver = false;
+        isGameOver_ = false;
         emit GameOver();
-
     }
-
 }
 
+void GameField::GetGameOver() {
+    for (int i = 0; i < columnsNumber_; i++) {
+        if (gameGrid_[0][i] != 0) {
+            isGameOver_ = true;
+        }
+    }
+}
 
 uint GameField::GetCurrentFigureRow() {
     return currentFigureRow_;
@@ -320,20 +209,18 @@ uint GameField::GetCurrentFigureColumn() {
     return currentFigureColumn_;
 }
 
-void GameField::clearGameGrid() {
-    GameGrid_ = QVector<QVector<int>>(rowsNumber_, QVector<int>(columnsNumber_, 0));
+void GameField::ClearGameGrid() {
+    gameGrid_ = QVector<QVector<int>>(rowsNumber_, QVector<int>(columnsNumber_, 0));
 
     currentFigure_ = QVector<QVector<int>>();
     currentFigureRow_ = 0;
     currentFigureColumn_ = 0;
 
-    qDebug() << "Поле очищено";
-
     update();
 }
 
 void GameField::SetWinPoints(int points) {
-    WinPoints = points;
+    winPoints_ = points;
     emit ChangeWinPoints();
 }
 
@@ -342,32 +229,29 @@ void GameField::paintEvent(QPaintEvent *event) {
     QPainter painter(this);
 
     painter.setPen(Qt::black);
-
     painter.fillRect(rect(), Qt::white);
-
 
     for (int i = 0; i < currentFigure_.size(); ++i) {
         for (int j = 0; j < currentFigure_[0].size(); ++j) {
             if (currentFigure_[i][j] == 1) {
-                int x = (currentFigureColumn_ + j) * blockSize;
-                int y = (currentFigureRow_ + i) * blockSize;
-                painter.fillRect(x, y, blockSize, blockSize, colorFigure);
+                int x = (currentFigureColumn_ + j) * blockSize_;
+                int y = (currentFigureRow_ + i) * blockSize_;
+                painter.fillRect(x, y, blockSize_, blockSize_, figureColor_);
             }
         }
     }
 
-    for (int i = 0; i < rowsNumber_;i++) {
-        for (int j = 0; j < columnsNumber_;j++) {
-            if (GameGrid_[i][j] == 1) {
-                int x = j * blockSize;
-                int y = i * blockSize;               
-                painter.fillRect(x, y, blockSize, blockSize, Qt::blue);
-                painter.drawRect(j * blockSize, i * blockSize, blockSize, blockSize);
+    for (int i = 0; i < rowsNumber_; i++) {
+        for (int j = 0; j < columnsNumber_; j++) {
+            if (gameGrid_[i][j] == 1) {
+                int x = j * blockSize_;
+                int y = i * blockSize_;
+                painter.fillRect(x, y, blockSize_, blockSize_, Qt::blue);
+                painter.drawRect(j * blockSize_, i * blockSize_, blockSize_, blockSize_);
             } else {
-                painter.drawRect(j * blockSize, i * blockSize, blockSize, blockSize);
+                painter.drawRect(j * blockSize_, i * blockSize_, blockSize_, blockSize_);
             }
         }
     }
     update();
 }
-

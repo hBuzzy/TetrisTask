@@ -6,6 +6,8 @@
 #include "gamefield.h"
 #include "modaldialog.h"
 #include "gameoverdialog.h"
+#include "nextfiguregamegrid.h"
+
 #include <QLCDNumber>
 
 QT_BEGIN_NAMESPACE
@@ -21,24 +23,27 @@ class Tetris : public QMainWindow {
   Tetris(QWidget *parent = nullptr);
   ~Tetris();
 
-  void gamePause();
-  void restoreBasedInterval();
-  void updateGameField();
-  void updateWinPoints();
-  void startNewGame();
-  void endGame();
+  void GamePause();
+  void RestoreBasedInterval();
+  void UpdateGameField();
+  void UpdateWinPoints();
+  void StartNewGame();
+  void EndGame();
+  void OpenModalDialog();
+  void OpenEndGameDialog();
 
- private:
-  Ui::Tetris *ui;
+private slots:
+    void UpdateGameFieldFigure();
 
-    QTimer *timer;
-    GameField *gamefield;
-    ModalDialog *modaldialog;
-    QLCDNumber *lcdNumber;
-    void openModalDialog();
-    void openEndGameDialog();
-
+protected:
     void keyPressEvent(QKeyEvent *event);
+private:
+    Ui::Tetris *ui;
 
+    int baseSpeed_, boostSpeed_;
+    QTimer *timer_;
+    GameField *gamefield_;
+    QLCDNumber *scoreCounter_;
+    NextFigureGameGrid *nextFigureGrid_;
 };
 #endif  // TETRIS_H

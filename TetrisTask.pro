@@ -13,6 +13,7 @@ SOURCES += \
     gameoverdialog.cpp \
     main.cpp \
     modaldialog.cpp \
+    nextfiguregamegrid.cpp \
     tetramino.cpp \
     tetris.cpp
 
@@ -20,6 +21,7 @@ HEADERS += \
     gamefield.h \
     gameoverdialog.h \
     modaldialog.h \
+    nextfiguregamegrid.h \
     tetramino.h \
     tetris.h
 
