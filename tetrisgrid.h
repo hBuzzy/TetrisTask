@@ -8,20 +8,20 @@
 class TetrisGrid : public QWidget {
     Q_OBJECT
     Q_PROPERTY(int rows READ rows WRITE setRows NOTIFY rowsChanged)
-    Q_PROPERTY(int cols READ cols WRITE setCols NOTIFY colsChanged)
+    Q_PROPERTY(int columns READ columns WRITE setColumns NOTIFY columnsChanged)
 public:
-    TetrisGrid(QWidget *parent = nullptr);
     int rows() const;
-    int cols() const;
-    bool isValidMove(const QVector<QVector<int>> &shape, int rows, int cols);
+    int columns() const;
+    bool isValidMove(const QVector<QVector<int>> &shape, int rows, int columns);
     void lockShape();
     void handleKeyPressEvent(QKeyEvent *event);
     void setupGame();
+    TetrisGrid(QWidget *parent = nullptr);
     QColor generateRandomColor();
 
 public slots:
     void setRows(int rows);
-    void setCols(int cols);
+    void setColumns(int columns);
     void startGame();
     void dropShape();
     void updateScore(int newScore);
@@ -32,7 +32,7 @@ public slots:
 
 signals:
     void rowsChanged(int rows);
-    void colsChanged(int cols);
+    void columnsChanged(int columns);
     void scoreChanged(int newScore);
     void gameOver();
 
@@ -41,16 +41,6 @@ protected:
     void keyPressEvent(QKeyEvent *event) override;
 
 private:
-    int m_rows_;
-    int m_cols_;
-    QVector<QVector<int>> m_grid_;
-    QTimer *timer_;
-    QVector<QVector<int>> currentShape_;
-    QVector<QVector<int>> nextShape_;
-    int shapeRow_;
-    int shapeCol_;
-    int score_;
-    int speed_ = 500;
     void drawGrid(QPainter &painter, int cellSize);
     void drawShape(QPainter &painter, int cellSize);
     void drawNextShape(QPainter &painter, int cellSize);
@@ -58,8 +48,16 @@ private:
     void checkLines();
     void addCurrentShapeToGridNew();
     bool isCollision();
-    bool locking_;
-    bool shapeLocked_;
+    QVector<QVector<int>> mGrid_;
+    QVector<QVector<int>> currentShape_;
+    QVector<QVector<int>> nextShape_;
+    QTimer *timer_;
+    int mRows_;
+    int mColumns_;
+    int shapeRow_;
+    int shapeColumn_;
+    int score_;
+    int speed_ = 500;
 };
 
 #endif // TETRISGRID_H

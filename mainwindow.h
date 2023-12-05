@@ -6,8 +6,7 @@
 #include <QLabel>
 #include "tetrisgrid.h"
 
-class MainWindow : public QMainWindow
-{
+class MainWindow : public QMainWindow {
     Q_OBJECT
 
 public:
@@ -15,14 +14,14 @@ public:
     ~MainWindow();
 
 private:
-    TetrisGrid *tetrisGrid;
-    QPushButton *startButton;
-    QPushButton *exitButton;
-    QPushButton *helpButton;
-    QLabel *scoreLabel;
     void setupGame();
     int score_;
-    bool gameOverHandled_ = false;
+    bool isGameOverHandled_ = false;
+    TetrisGrid *tetrisGrid_;
+    QPushButton *startButton_;
+    QPushButton *exitButton_;
+    QPushButton *helpButton_;
+    QLabel *scoreLabel_;
 
 private slots:
     void startGame();
@@ -31,10 +30,8 @@ private slots:
     void restartGame();
     void showHelp();
 
-public slots:
+protected:
     void keyPressEvent(QKeyEvent *event);
-
-
 };
 
 #endif // MAINWINDOW_H

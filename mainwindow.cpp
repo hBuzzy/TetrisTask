@@ -7,12 +7,12 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), score_(0) {
-    gameOverHandled_ = false;
-    tetrisGrid = new TetrisGrid(this);
-    startButton =new QPushButton("Начать новую игру", this);
-    exitButton = new QPushButton("Выход", this);
-    scoreLabel = new QLabel("Счетчик очков: 0", this);
-    helpButton = new QPushButton("Справка", this);
+    isGameOverHandled_ = false;
+    tetrisGrid_ = new TetrisGrid(this);
+    startButton_ =new QPushButton("Начать новую игру", this);
+    exitButton_ = new QPushButton("Выход", this);
+    scoreLabel_ = new QLabel("Счетчик очков: 0", this);
+    helpButton_ = new QPushButton("Справка", this);
 
     qApp->setStyle(QStyleFactory::create("Fusion"));
     QGraphicsDropShadowEffect *shadowEffect = new QGraphicsDropShadowEffect(this);
@@ -33,30 +33,30 @@ MainWindow::MainWindow(QWidget *parent)
                                         "   background-color: #2980b9;"
                                         "   color: #bdc3c7;"
                                         "}";
-    startButton->setStyleSheet(buttonStyle);
-    startButton->setGraphicsEffect(shadowEffect);
-    helpButton->setStyleSheet(buttonStyle);
-    helpButton->setGraphicsEffect(shadowEffect);
-    exitButton->setStyleSheet(buttonStyle);
-    exitButton->setGraphicsEffect(shadowEffect);
+    startButton_->setStyleSheet(buttonStyle);
+    startButton_->setGraphicsEffect(shadowEffect);
+    helpButton_->setStyleSheet(buttonStyle);
+    helpButton_->setGraphicsEffect(shadowEffect);
+    exitButton_->setStyleSheet(buttonStyle);
+    exitButton_->setGraphicsEffect(shadowEffect);
 
-    connect(helpButton, &QPushButton::clicked, this, &MainWindow::showHelp);
-    connect(startButton, &QPushButton::clicked, this, &MainWindow::restartGame);
-    connect(exitButton, &QPushButton::clicked, this, &MainWindow::exitGame);
-    connect(tetrisGrid, SIGNAL(scoreChanged(int)), this, SLOT(updateScore(int)));
-    connect(tetrisGrid, &TetrisGrid::gameOver, [=]() {
-        if (!gameOverHandled_) {
-            gameOverHandled_ = true;
+    connect(helpButton_, &QPushButton::clicked, this, &MainWindow::showHelp);
+    connect(startButton_, &QPushButton::clicked, this, &MainWindow::restartGame);
+    connect(exitButton_, &QPushButton::clicked, this, &MainWindow::exitGame);
+    connect(tetrisGrid_, SIGNAL(scoreChanged(int)), this, SLOT(updateScore(int)));
+    connect(tetrisGrid_, &TetrisGrid::gameOver, [=]() {
+        if (!isGameOverHandled_) {
+            isGameOverHandled_ = true;
             exitGame();
         }
     });
 
     QVBoxLayout *layout = new QVBoxLayout;
-    layout->addWidget(tetrisGrid, Qt::AlignHCenter);
-    layout->addWidget(scoreLabel);
-    layout->addWidget(startButton);
-    layout->addWidget(helpButton);
-    layout->addWidget(exitButton);
+    layout->addWidget(tetrisGrid_, Qt::AlignHCenter);
+    layout->addWidget(scoreLabel_);
+    layout->addWidget(startButton_);
+    layout->addWidget(helpButton_);
+    layout->addWidget(exitButton_);
 
     QWidget *centralWidget = new QWidget(this);
     centralWidget->setLayout(layout);
@@ -80,7 +80,7 @@ void MainWindow::showHelp() {
 }
 
 void MainWindow::restartGame() {
-    tetrisGrid->startGame();
+    tetrisGrid_->startGame();
     setupGame();
 }
 
@@ -91,7 +91,7 @@ void MainWindow::startGame() {
 }
 
 void MainWindow::exitGame() {
-    gameOverHandled_ = true;
+    isGameOverHandled_ = true;
     QMessageBox messageBox;
     messageBox.setWindowTitle("Игра окончена");
     messageBox.setText("Игра завершена. Набрано очков: " + QString::number(score_));
@@ -102,11 +102,11 @@ void MainWindow::exitGame() {
 
 void MainWindow::updateScore(int newScore) {
     score_ = newScore;
-    scoreLabel->setText("Счетчик очков: " + QString::number(score_));
+    scoreLabel_->setText("Счетчик очков: " + QString::number(score_));
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event) {
-     tetrisGrid->handleKeyPressEvent(event);
+     tetrisGrid_->handleKeyPressEvent(event);
 }
 
 void MainWindow::setupGame() {}
