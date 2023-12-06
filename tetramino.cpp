@@ -5,7 +5,8 @@ Tetramino::Tetramino(QObject *parent) : QObject(parent) {}
 Tetramino::~Tetramino() {}
 
 void Tetramino::SetRandomFigure() {
-    int randNumb = 1 + rand() % 7;
+    int countFigures = 7;
+    int randNumb = 1 + rand() % countFigures;
     switch (randNumb) {
     case 1:
         currentFigure_ = {

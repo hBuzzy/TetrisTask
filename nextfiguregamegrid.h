@@ -15,7 +15,7 @@ public:
 
     QVector<QVector<int>> GetNextFigure();
 signals:
-    void nextFigureChanged();
+    void NextFigureChanged();
 
 protected:
     void paintEvent(QPaintEvent *event) override;
@@ -24,6 +24,6 @@ private:
     QVector<QVector<int>> nextFigure_;
     int blockSize_;
 
-    Tetramino *tetr_;
+    Tetramino *tetramino_;
 };
 #endif // NEXTFIGUREGAMEGRID_H

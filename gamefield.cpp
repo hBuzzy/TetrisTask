@@ -18,8 +18,8 @@ GameField::GameField(QWidget *parent) : QWidget(parent) {
     currentFigureColumn_ = 0;
 }
 
-void GameField::SetNextFigureGrid(QVector<QVector<int>> fig) {
-    nextFigure_ = fig;
+void GameField::SetNextFigureGrid(QVector<QVector<int>> figure) {
+    nextFigure_ = figure;
 }
 
 uint GameField::GetRowsNumber() const { return rowsNumber_; }
@@ -169,10 +169,9 @@ void GameField::MoveFigure() {
 
     if(!isGameOver_) {
         if (currentFigureRow_ + currentFigure_.size() < rowsNumber_) {
-            bool HasCollision = HasCollisionMove(1, 0);
+            bool hasCollision = HasCollisionMove(1, 0);
 
-
-            if (HasCollision) {
+            if (hasCollision) {
                 UpdateGameGrid();
                 SpawnNextFigure();
                 SetFigurePosition(0, columnsNumber_ / CenterPointX);

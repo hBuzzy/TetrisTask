@@ -28,7 +28,7 @@ class GameField : public QWidget {
     void GameOver();
 
  public:
-    void SetNextFigureGrid(QVector<QVector<int>> fig);
+    void SetNextFigureGrid(QVector<QVector<int>> figure);
 
     uint GetRowsNumber() const;
     void SetRowsNumber(uint newRowsNumber);

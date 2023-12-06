@@ -3,15 +3,14 @@
 NextFigureGameGrid::NextFigureGameGrid(QWidget *parent) : QWidget(parent), blockSize_(30) {
     setFixedSize(120, 120);
 
-    tetr_ = new Tetramino(this);
+    tetramino_ = new Tetramino(this);
 
     nextFigure_ = QVector<QVector<int>>();
 }
 
-
 void NextFigureGameGrid::SetNextFigure() {
-    nextFigure_ = tetr_->GetCurrentFigure();
-    emit nextFigureChanged();
+    nextFigure_ = tetramino_->GetCurrentFigure();
+    emit NextFigureChanged();
     update();
 }
 QVector<QVector<int>> NextFigureGameGrid::GetNextFigure() {

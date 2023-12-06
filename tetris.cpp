@@ -43,7 +43,7 @@ Tetris::Tetris(QWidget *parent) : QMainWindow(parent), ui(new Ui::Tetris) {
     connect(newGameButton, &QPushButton::clicked, this, &Tetris::UpdateGameFieldFigure);
     connect(newGameButton, &QPushButton::clicked, this, &Tetris::StartNewGame);
     connect(gamefield_, &GameField::FigureSpawned, nextFigureGrid_, &NextFigureGameGrid::SetNextFigure);
-    connect(nextFigureGrid_, &NextFigureGameGrid::nextFigureChanged, this, &Tetris::UpdateGameFieldFigure);
+    connect(nextFigureGrid_, &NextFigureGameGrid::NextFigureChanged, this, &Tetris::UpdateGameFieldFigure);
     connect(timer_, &QTimer::timeout, gamefield_, &GameField::MoveFigure);
     connect(gamefield_, &GameField::FigureSpawned, this, &Tetris::RestoreBasedInterval);
     connect(gamefield_, &GameField::CurrentFigureChanged, this, &Tetris::UpdateGameField);
