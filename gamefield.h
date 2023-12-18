@@ -2,6 +2,9 @@
 #define GAMEFIELD_H
 
 #include <QWidget>
+#include <QTimer>
+
+#include "figure.h"
 
 class GameField : public QWidget {
   Q_OBJECT
@@ -17,20 +20,45 @@ class GameField : public QWidget {
   void RowsNumberChanged();
   void ColumnsNumberChanged();
   void InitialisationStarted();
+  void moveFigure();
 
  private slots:
   void SetCells();
 
  public:
   uint GetRowsNumber() const;
-  void SetRowsNumber(uint newRowsNumber);
-
   uint GetColumnsNumber() const;
   void SetColumnNumber(uint newColumnsCount);
+  void SetRowsNumber(uint newRowsNumber);
+
+  void moveDown();
+  void rotateFigure();
+  void moveFigureLeft();
+  void moveFigureRight();
+  void setNewFigure();
+  void startNewGame();
+  void clearLines();
+  void changeScore(int points);
+
+  QVector<QVector<int>> getGameField();
+
+protected slots:
+    void paintEvent(QPaintEvent *event);
+    void keyPressEvent(QKeyEvent *event);
+    void refresh();
 
  private:
-  uint rowsNumber_ = 0;
-  uint columnsNumber_ = 0;
+     bool isCollision(const Figure &movedFigure, int xOffset, int yOffset);
+
+    QVector<QVector<int>> gameField_;
+    Figure  nextFigure_;
+    Figure currentFigure_;
+    uint rowsNumber_ = 0;
+    uint columnsNumber_ = 0;
+    int currentXPosition_ = 3;
+    int currentYPosition_ = 0;
+    int score_ = 0;
+    QTimer* timer_;
 };
 
 #endif  // GAMEFIELD_H

@@ -11,11 +11,13 @@ CONFIG += c++17
 SOURCES += \
     gamefield.cpp \
     main.cpp \
-    tetris.cpp
+    tetris.cpp \
+    figure.cpp
 
 HEADERS += \
     gamefield.h \
-    tetris.h
+    tetris.h \
+    figure.h
 
 FORMS += \
     tetris.ui
