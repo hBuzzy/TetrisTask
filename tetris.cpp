@@ -61,6 +61,4 @@ void Tetris::showRules() {
                 );
   }
 
-
-
 Tetris::~Tetris() { delete ui; }

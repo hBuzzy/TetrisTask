@@ -94,6 +94,7 @@ void GameField::keyPressEvent(QKeyEvent *event) {
         break;
     }
 }
+
   void GameField::rotateFigure() {
           Figure rotatedFigure = currentFigure_;
           rotatedFigure.rotateFigure();

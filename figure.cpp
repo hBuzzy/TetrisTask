@@ -34,7 +34,7 @@ void Figure::rotateFigure() {
     QVector<QVector<int>> rotated(getXPoints(), QVector<int> (getYPoints()));
 
     for (int i = 0; i < getYPoints(); i++) {
-        for (int j = 0; j < getXPoints(); j++){
+        for (int j = 0; j < getXPoints(); j++) {
             rotated[j][getYPoints() - 1 - i] = figure_[i][j];
         }
     }
@@ -42,11 +42,11 @@ void Figure::rotateFigure() {
 }
 void Figure::generateColor() {
     QVector<QColor> arrayOfColors;
-    arrayOfColors.append( QColor(255, 135, 50) );
-    arrayOfColors.append( QColor(168, 50, 168) );
-    arrayOfColors.append( QColor(0, 255, 0) );
-    arrayOfColors.append( QColor(0, 255, 255) );
-    arrayOfColors.append( QColor(127, 0, 255) );
+    arrayOfColors.append( QColor(255, 135, 50));
+    arrayOfColors.append( QColor(168, 50, 168));
+    arrayOfColors.append( QColor(0, 255, 0));
+    arrayOfColors.append( QColor(0, 255, 255));
+    arrayOfColors.append( QColor(127, 0, 255));
 
     srand(time(NULL));
     int type = rand() % arrayOfColors.size();

@@ -14,7 +14,7 @@ public:
     void generateFigure();
     int getXPoints() const;
     int getYPoints() const;
-    int getFigureAt(int row, int col) const;
+    int getFigureAt(int yPoints, int xPoints) const;
     QVector<QVector<int>> getFigure();
     void generateColor();
     QColor getColor();
