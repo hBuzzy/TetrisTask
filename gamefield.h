@@ -3,6 +3,8 @@
 
 #include <QWidget>
 #include <QTimer>
+#include <QPainter>
+#include <QPoint>
 
 #include "figure.h"
 
@@ -12,14 +14,14 @@ class GameField : public QWidget {
   explicit GameField(QWidget *parent = nullptr);
 
   Q_PROPERTY(uint rowsNumber READ GetRowsNumber WRITE SetRowsNumber NOTIFY
-                 RowsNumberChanged FINAL)
+                 rowsNumberChanged FINAL)
   Q_PROPERTY(uint columnsNumber READ GetColumnsNumber WRITE SetColumnNumber
-                 NOTIFY ColumnsNumberChanged FINAL)
+                 NOTIFY columnsNumberChanged FINAL)
 
  signals:
-  void RowsNumberChanged();
-  void ColumnsNumberChanged();
-  void InitialisationStarted();
+  void rowsNumberChanged();
+  void columnsNumberChanged();
+  void initialisationStarted();
   void moveFigure();
 
  private slots:
@@ -43,12 +45,13 @@ class GameField : public QWidget {
   QVector<QVector<int>> getGameField();
 
 protected slots:
-    void paintEvent(QPaintEvent *event);
-    void keyPressEvent(QKeyEvent *event);
     void refresh();
 
  private:
-     bool isCollision(const Figure &movedFigure, int xOffset, int yOffset);
+    void paintEvent(QPaintEvent *event);
+    void keyPressEvent(QKeyEvent *event);
+    bool isCollision(const Figure &movedFigure, int xOffset, int yOffset);
+    void drawFigure(Figure figure, QPainter *painter, QPoint currentPosition);
 
     QVector<QVector<int>> gameField_;
     Figure  nextFigure_;
@@ -58,7 +61,9 @@ protected slots:
     int currentXPosition_ = 3;
     int currentYPosition_ = 0;
     int score_ = 0;
+    int blockSize_ = 30;
     QTimer* timer_;
+    QPainter painter_;
 };
 
 #endif  // GAMEFIELD_H

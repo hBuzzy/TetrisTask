@@ -5,12 +5,11 @@
 #include <QObject>;
 #include <QColor>
 
-class Figure
-{
+class Figure {
 public:
     Figure();
 
-    void rotateFigure();
+    void rotate();
     void generateFigure();
     int getXPoints() const;
     int getYPoints() const;
