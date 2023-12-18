@@ -66,7 +66,6 @@ void GameField::paintEvent(QPaintEvent *event) {
 
     drawFigure(currentFigure_, painter, QPoint(currentXPosition_, currentYPosition_));
     drawFigure(nextFigure_, painter, QPoint(nextLayerPositionX, 0));
-
     painter->drawText(350, 125, QString("Score: %1").arg(score_));
 
 }
@@ -122,7 +121,7 @@ void GameField::moveDown() {
     }else {
         for (int i = 0; i < currentFigure_.getYPoints(); i++)
             for (int j = 0; j < currentFigure_.getXPoints(); j++)
-                if (currentFigure_.getFigureAt(j, i) == 1)
+                if (currentFigure_.getFigureAt(QPoint(i, j)) == 1)
                     gameField_[currentYPosition_ + i][currentXPosition_ + j] = 1;
         setNewFigure();
         clearLines();
@@ -137,7 +136,7 @@ bool GameField::isCollision(const Figure &movedFigure, int xOffset, int yOffset)
 
     for (int i = 0; i <= movedFigure.getYPoints(); i++) {
         for (int j = 0; j < movedFigure.getXPoints(); j++) {
-            if (movedFigure.getFigureAt(j, i) == 1) {
+            if (movedFigure.getFigureAt(QPoint(i, j)) == 1) {
                 if (currentXPosition_ + j + xOffset < 0 || currentXPosition_ + j + xOffset >= gameField_[0].size()  ||
                     currentYPosition_ + i + yOffset >= gameField_.size() ||
                     gameField_[currentYPosition_ + i + yOffset][currentXPosition_ + j + xOffset] == 1)

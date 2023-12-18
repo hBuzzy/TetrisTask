@@ -4,6 +4,7 @@
 #include <QVector>;
 #include <QObject>;
 #include <QColor>
+#include <QPoint>
 
 class Figure {
 public:
@@ -13,7 +14,7 @@ public:
     void generateFigure();
     int getXPoints() const;
     int getYPoints() const;
-    int getFigureAt(int yPoints, int xPoints) const;
+    int getFigureAt(QPoint point) const;
     QVector<QVector<int>> getFigure();
     void generateColor();
     QColor getColor();

@@ -24,20 +24,22 @@ int Figure::getYPoints() const {
     return figure_[0].size();
 }
 
-int Figure::getFigureAt(int yPoints, int xPoints) const {
-    if (yPoints >= 0 && yPoints < getYPoints() && xPoints >= 0 && xPoints < getXPoints())
-        return figure_[yPoints][xPoints];
+int Figure::getFigureAt(QPoint point) const {
+    if (point.y() >= 0 && point.y() < getYPoints() && point.x() >= 0 && point.x() < getXPoints())
+        return figure_[point.y()][point.x()];
     return 0;
 }
 QVector<QVector<int>> Figure::getFigure() {
     return figure_;
 }
 void Figure::rotate() {
-    QVector<QVector<int>> rotated(getXPoints(), QVector<int> (getYPoints()));
+    int xPoints = getXPoints();
+    int yPoints = getYPoints();
+    QVector<QVector<int>> rotated(xPoints, QVector<int> (yPoints));
 
-    for (int i = 0; i < getYPoints(); i++) {
-        for (int j = 0; j < getXPoints(); j++) {
-            rotated[j][getYPoints() - 1 - i] = figure_[i][j];
+    for (int i = 0; i < yPoints; i++) {
+        for (int j = 0; j < xPoints; j++) {
+            rotated[j][yPoints - 1 - i] = figure_[i][j];
         }
     }
     figure_ = rotated;
